@@ -33,7 +33,7 @@ struct ChapterAttributes {
     volume: Option<String>,
     pages: usize,
     #[serde(rename = "translatedLanguage")]
-    translated_language: String,
+    _translated_language: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -46,7 +46,7 @@ struct AtHomeResponse {
 #[derive(Debug, Deserialize)]
 struct AtHomeChapter {
     hash: String,
-    data: Vec<String>,
+    _data: Vec<String>,
     #[serde(rename = "dataSaver")]
     data_saver: Vec<String>,
 }
@@ -56,6 +56,7 @@ pub struct Manga {
     pub id: String,
     pub title: String,
     pub author: String,
+    #[allow(dead_code)]
     pub artist: String,
     pub status: String,
     pub description: String,
