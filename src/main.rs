@@ -148,10 +148,30 @@ async fn run_app(
         pending_covers.insert(manga.id.clone());
     }
 
+    const DEBOUNCE_MS: u64 = 300;
+
     loop {
         terminal.draw(|f| ui(f, app))?;
 
+        // Check if we need to trigger a debounced search
+        if let Some(debounce_time) = app.search_debounce {
+            if debounce_time.elapsed().as_millis() >= DEBOUNCE_MS as u128 {
+                app.search_debounce = None;
+                if !app.search_query.is_empty() 
+                    && !app.searching 
+                    && app.search_query != app.last_search_query 
+                {
+                    app.searching = true;
+                    app.last_search_query = app.search_query.clone();
+                    spawn_search(app.search_query.clone(), task_tx.clone());
+                }
+            }
+        }
+
         tokio::select! {
+            // Timeout to check debounce timer
+            _ = tokio::time::sleep(tokio::time::Duration::from_millis(50)) => {}
+
             // Handle keyboard events
             Some(Ok(event)) = event_stream.next() => {
                 if let Event::Key(key) = event {
@@ -351,16 +371,25 @@ fn handle_search_tab_input(
     match key {
         KeyCode::Char(c) => {
             app.search_query.push(c);
+            app.search_debounce = Some(std::time::Instant::now());
         }
         KeyCode::Backspace => {
             app.search_query.pop();
+            if app.search_query.is_empty() {
+                app.search_results.clear();
+                app.last_search_query.clear();
+                app.search_debounce = None;
+            } else {
+                app.search_debounce = Some(std::time::Instant::now());
+            }
         }
         KeyCode::Enter => {
             if app.focus == Focus::Header {
-                // Search when focused on input
+                // Immediate search on Enter
                 if !app.search_query.is_empty() && !app.searching {
                     app.searching = true;
-                    app.search_results.clear();
+                    app.last_search_query = app.search_query.clone();
+                    app.search_debounce = None;
                     spawn_search(app.search_query.clone(), task_tx.clone());
                 }
             } else {
