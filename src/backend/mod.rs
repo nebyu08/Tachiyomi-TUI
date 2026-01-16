@@ -1,1 +1,1 @@
-pub mod backend;
+pub mod mangadex;

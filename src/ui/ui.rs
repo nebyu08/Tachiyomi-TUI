@@ -8,23 +8,20 @@ Frame,
 
 #[derive(Default)]
 pub struct App {
-search: String,
-recent_offset: usize,
-popular_offset: usize,
-focus: Focus,
-recently_updated: Vec<String>,
-popular_now: Vec<String>,
+    pub search: String,
+    pub recent_offset: usize,
+    pub popular_offset: usize,
+    pub focus: Focus,
+    pub recently_updated: Vec<String>,
+    pub popular_now: Vec<String>,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Focus {
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
+pub enum Focus {
+    #[default]
     Search,
     Recent,
     Popular,
-}
-
-impl Default for Focus {
-    fn default() -> Self { Focus::Search }
 }
 
 pub fn ui(f: &mut Frame, app: &mut App) {
@@ -36,7 +33,7 @@ pub fn ui(f: &mut Frame, app: &mut App) {
     Constraint::Length(7), // popular now
     Constraint::Length(3), // footer
     ])
-    .split(f.size());
+    .split(f.area());
     
     
     draw_header(f, root[0], app);

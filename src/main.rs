@@ -1,6 +1,7 @@
 mod ui;
-use ui::ui::App;
-use ui::ui::ui;
+mod backend;
+
+use ui::ui::{App, Focus, ui};
 
 use std::{error::Error, io, time::Duration};
 use crossterm::{
@@ -11,27 +12,6 @@ terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlterna
 use ratatui::{
 backend::CrosstermBackend, Terminal,
 };
-
-// #[derive(Default)]
-// pub struct App {
-// search: String,
-// recent_offset: usize,
-// popular_offset: usize,
-// focus: Focus,
-// recently_updated: Vec<String>,
-// popular_now: Vec<String>,
-// }
-
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Focus {
-    Search,
-    Recent,
-    Popular,
-}
-
-// impl Default for Focus {
-//     fn default() -> Self { Focus::Search }
-// }
 fn main() ->Result<(), Box<dyn Error>> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
@@ -63,8 +43,8 @@ fn main() ->Result<(), Box<dyn Error>> {
     
 }
 
-fn run_app<B: ratatui::backend::Backend>(
-terminal: &mut Terminal<B>,
+fn run_app(
+terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
 app: &mut App,
 ) -> io::Result<()> {
 loop {
