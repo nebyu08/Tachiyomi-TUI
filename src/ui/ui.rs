@@ -3,13 +3,13 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Tabs},
+    widgets::{Block, Borders, List, ListItem, ListState, Paragraph, Tabs},
     Frame,
 };
 use ratatui_image::{picker::Picker, protocol::StatefulProtocol, Resize, StatefulImage};
 use std::collections::HashMap;
 
-use crate::backend::mangadex::Manga;
+use crate::backend::mangadex::{Chapter, Manga};
 
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
 pub enum Tab {
@@ -34,8 +34,28 @@ pub enum AppState {
     Ready,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
+pub enum View {
+    #[default]
+    Home,
+    MangaDetail,
+    Reader,
+}
+
+#[derive(Default)]
+pub struct ReaderState {
+    pub manga: Option<Manga>,
+    pub chapters: Vec<Chapter>,
+    pub current_chapter_idx: usize,
+    pub page_urls: Vec<String>,
+    pub current_page: usize,
+    pub page_image: Option<StatefulProtocol>,
+    pub loading: bool,
+}
+
 pub struct App {
     pub state: AppState,
+    pub view: View,
     pub loading_message: String,
     pub tab: Tab,
     pub focus: Focus,
@@ -47,6 +67,14 @@ pub struct App {
     pub picker: Option<Picker>,
     pub cover_images: HashMap<String, DynamicImage>,
     pub image_states: HashMap<String, StatefulProtocol>,
+    
+    // Manga detail view
+    pub selected_manga: Option<Manga>,
+    pub chapters: Vec<Chapter>,
+    pub chapter_list_state: ListState,
+    
+    // Reader view
+    pub reader: ReaderState,
 }
 
 impl Default for App {
@@ -61,6 +89,7 @@ impl App {
 
         Self {
             state: AppState::Loading,
+            view: View::Home,
             loading_message: "Initializing...".to_string(),
             tab: Tab::Home,
             focus: Focus::Header,
@@ -72,6 +101,10 @@ impl App {
             picker,
             cover_images: HashMap::new(),
             image_states: HashMap::new(),
+            selected_manga: None,
+            chapters: Vec::new(),
+            chapter_list_state: ListState::default(),
+            reader: ReaderState::default(),
         }
     }
 
@@ -86,10 +119,95 @@ impl App {
 
     pub fn add_cover_image(&mut self, manga_id: &str, image: DynamicImage) {
         self.cover_images.insert(manga_id.to_string(), image.clone());
-        
+
         if let Some(ref picker) = self.picker {
             let protocol = picker.new_resize_protocol(image);
             self.image_states.insert(manga_id.to_string(), protocol);
+        }
+    }
+
+    pub fn open_manga(&mut self, manga: Manga) {
+        self.selected_manga = Some(manga);
+        self.view = View::MangaDetail;
+        self.chapters.clear();
+        self.chapter_list_state.select(Some(0));
+    }
+
+    pub fn open_reader(&mut self, chapter_idx: usize) {
+        self.reader.current_chapter_idx = chapter_idx;
+        self.reader.manga = self.selected_manga.clone();
+        self.reader.chapters = self.chapters.clone();
+        self.reader.current_page = 0;
+        self.reader.page_urls.clear();
+        self.reader.page_image = None;
+        self.reader.loading = true;
+        self.view = View::Reader;
+    }
+
+    pub fn set_page_image(&mut self, image: DynamicImage) {
+        if let Some(ref picker) = self.picker {
+            self.reader.page_image = Some(picker.new_resize_protocol(image));
+        }
+        self.reader.loading = false;
+    }
+
+    pub fn next_page(&mut self) -> bool {
+        if self.reader.current_page + 1 < self.reader.page_urls.len() {
+            self.reader.current_page += 1;
+            self.reader.loading = true;
+            self.reader.page_image = None;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn prev_page(&mut self) -> bool {
+        if self.reader.current_page > 0 {
+            self.reader.current_page -= 1;
+            self.reader.loading = true;
+            self.reader.page_image = None;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn next_chapter(&mut self) -> bool {
+        if self.reader.current_chapter_idx + 1 < self.reader.chapters.len() {
+            self.reader.current_chapter_idx += 1;
+            self.reader.current_page = 0;
+            self.reader.page_urls.clear();
+            self.reader.page_image = None;
+            self.reader.loading = true;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn prev_chapter(&mut self) -> bool {
+        if self.reader.current_chapter_idx > 0 {
+            self.reader.current_chapter_idx -= 1;
+            self.reader.current_page = 0;
+            self.reader.page_urls.clear();
+            self.reader.page_image = None;
+            self.reader.loading = true;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn go_back(&mut self) {
+        match self.view {
+            View::Reader => self.view = View::MangaDetail,
+            View::MangaDetail => {
+                self.view = View::Home;
+                self.selected_manga = None;
+                self.chapters.clear();
+            }
+            View::Home => {}
         }
     }
 }
@@ -99,7 +217,11 @@ const CARD_WIDTH: u16 = 35;
 pub fn ui(f: &mut Frame, app: &mut App) {
     match app.state {
         AppState::Loading => draw_loading_screen(f, app),
-        AppState::Ready => draw_main_ui(f, app),
+        AppState::Ready => match app.view {
+            View::Home => draw_main_ui(f, app),
+            View::MangaDetail => draw_manga_detail(f, app),
+            View::Reader => draw_reader(f, app),
+        },
     }
 }
 
@@ -199,7 +321,191 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
         &mut app.image_states,
     );
 
-    draw_footer(f, root[2]);
+    draw_footer(f, root[2], "Tab: section | ←/→: scroll | ↑/↓: focus | Enter: select | q: quit");
+}
+
+fn draw_manga_detail(f: &mut Frame, app: &mut App) {
+    let area = f.area();
+
+    let manga = match &app.selected_manga {
+        Some(m) => m,
+        None => return,
+    };
+
+    let root = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3),  // header
+            Constraint::Min(10),    // content
+            Constraint::Length(3),  // footer
+        ])
+        .split(area);
+
+    // Header with manga title
+    let header = Paragraph::new(manga.title.clone())
+        .style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD))
+        .alignment(Alignment::Center)
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Manga Details")
+                .border_style(Style::default().fg(Color::Cyan)),
+        );
+    f.render_widget(header, root[0]);
+
+    // Content: manga info + chapters list
+    let content_layout = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Length(40), // manga info
+            Constraint::Min(20),    // chapters list
+        ])
+        .split(root[1]);
+
+    // Manga info panel
+    let info_block = Block::default()
+        .borders(Borders::ALL)
+        .title("Info")
+        .border_style(Style::default().fg(Color::Yellow));
+
+    let info_inner = info_block.inner(content_layout[0]);
+    f.render_widget(info_block, content_layout[0]);
+
+    let info_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(12), // cover image
+            Constraint::Min(5),     // details
+        ])
+        .split(info_inner);
+
+    // Cover image
+    if let Some(state) = app.image_states.get_mut(&manga.id) {
+        let image_widget = StatefulImage::new().resize(Resize::Fit(None));
+        f.render_stateful_widget(image_widget, info_layout[0], state);
+    } else {
+        let placeholder = Paragraph::new("📚 Loading cover...")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(placeholder, info_layout[0]);
+    }
+
+    // Manga details
+    let details = vec![
+        Line::from(vec![
+            Span::styled("Author: ", Style::default().fg(Color::Yellow)),
+            Span::raw(&manga.author),
+        ]),
+        Line::from(vec![
+            Span::styled("Status: ", Style::default().fg(Color::Yellow)),
+            Span::styled(&manga.status, Style::default().fg(Color::Cyan)),
+        ]),
+        Line::from(""),
+        Line::from(Span::styled("Description:", Style::default().fg(Color::Yellow))),
+        Line::from(truncate_text(&manga.description, 35)),
+    ];
+    let details_paragraph = Paragraph::new(details);
+    f.render_widget(details_paragraph, info_layout[1]);
+
+    // Chapters list
+    let chapters_block = Block::default()
+        .borders(Borders::ALL)
+        .title(format!("Chapters ({})", app.chapters.len()))
+        .border_style(Style::default().fg(Color::Yellow));
+
+    if app.chapters.is_empty() {
+        let loading = Paragraph::new("Loading chapters...")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::DarkGray))
+            .block(chapters_block);
+        f.render_widget(loading, content_layout[1]);
+    } else {
+        let items: Vec<ListItem> = app
+            .chapters
+            .iter()
+            .map(|ch| {
+                let vol = ch.volume.as_ref().map(|v| format!("Vol.{} ", v)).unwrap_or_default();
+                let text = format!("{}Ch.{} - {} ({} pages)", vol, ch.chapter, ch.title, ch.pages);
+                ListItem::new(truncate_text(&text, 60))
+            })
+            .collect();
+
+        let list = List::new(items)
+            .block(chapters_block)
+            .highlight_style(
+                Style::default()
+                    .fg(Color::Black)
+                    .bg(Color::Yellow)
+                    .add_modifier(Modifier::BOLD),
+            )
+            .highlight_symbol("▶ ");
+
+        f.render_stateful_widget(list, content_layout[1], &mut app.chapter_list_state);
+    }
+
+    draw_footer(f, root[2], "↑/↓: select chapter | Enter: read | Esc: back | q: quit");
+}
+
+fn draw_reader(f: &mut Frame, app: &mut App) {
+    let area = f.area();
+
+    let root = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3), // header
+            Constraint::Min(10),   // page content
+            Constraint::Length(3), // footer
+        ])
+        .split(area);
+
+    // Header with chapter info
+    let chapter_info = if let Some(chapter) = app.reader.chapters.get(app.reader.current_chapter_idx) {
+        format!(
+            "Chapter {} - {} | Page {}/{}",
+            chapter.chapter,
+            chapter.title,
+            app.reader.current_page + 1,
+            app.reader.page_urls.len().max(1)
+        )
+    } else {
+        "Loading...".to_string()
+    };
+
+    let header = Paragraph::new(chapter_info)
+        .style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD))
+        .alignment(Alignment::Center)
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Reader")
+                .border_style(Style::default().fg(Color::Cyan)),
+        );
+    f.render_widget(header, root[0]);
+
+    // Page content
+    let content_block = Block::default()
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(Color::DarkGray));
+
+    let inner = content_block.inner(root[1]);
+    f.render_widget(content_block, root[1]);
+
+    if app.reader.loading {
+        let loading = Paragraph::new("⏳ Loading page...")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::Yellow));
+        f.render_widget(loading, inner);
+    } else if let Some(ref mut state) = app.reader.page_image {
+        let image_widget = StatefulImage::new().resize(Resize::Fit(None));
+        f.render_stateful_widget(image_widget, inner, state);
+    } else {
+        let error = Paragraph::new("Failed to load page")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::Red));
+        f.render_widget(error, inner);
+    }
+
+    draw_footer(f, root[2], "←/→: page | n: next ch | p: prev ch | Esc: back | q: quit");
 }
 
 fn draw_header(f: &mut Frame, area: Rect, app: &App) {
@@ -463,17 +769,25 @@ fn wrap_text(text: &str, width: usize, max_lines: usize) -> Vec<String> {
     lines
 }
 
-fn draw_footer(f: &mut Frame, area: Rect) {
-    let text = Line::from(vec![
-        Span::styled("Tab", Style::default().fg(Color::Yellow)),
-        Span::raw(": switch section  "),
-        Span::styled("←/→", Style::default().fg(Color::Yellow)),
-        Span::raw(": scroll  "),
-        Span::styled("↑/↓", Style::default().fg(Color::Yellow)),
-        Span::raw(": focus  "),
-        Span::styled("q", Style::default().fg(Color::Yellow)),
-        Span::raw(": quit"),
-    ]);
+fn draw_footer(f: &mut Frame, area: Rect, help_text: &str) {
+    let spans: Vec<Span> = help_text
+        .split(" | ")
+        .flat_map(|part| {
+            let mut parts = part.splitn(2, ": ");
+            if let (Some(key), Some(desc)) = (parts.next(), parts.next()) {
+                vec![
+                    Span::styled(key, Style::default().fg(Color::Yellow)),
+                    Span::raw(": "),
+                    Span::raw(desc),
+                    Span::raw("  "),
+                ]
+            } else {
+                vec![Span::raw(part), Span::raw("  ")]
+            }
+        })
+        .collect();
+
+    let text = Line::from(spans);
 
     let p = Paragraph::new(text)
         .block(
