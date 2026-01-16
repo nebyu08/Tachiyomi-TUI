@@ -22,13 +22,27 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let mut app = App::new();
 
-    // Fetch manga data
+    // Show loading screen
+    app.set_loading("Connecting to MangaDex...");
+    terminal.draw(|f| ui(f, &mut app))?;
+
+    // Fetch data with loading updates
+    app.set_loading("Fetching recently updated manga...");
+    terminal.draw(|f| ui(f, &mut app))?;
+    
     if let Ok(recent) = get_recently_updated().await {
         app.recently_updated = recent;
     }
+
+    app.set_loading("Fetching popular manga...");
+    terminal.draw(|f| ui(f, &mut app))?;
+
     if let Ok(popular) = get_popular_now().await {
         app.popular_now = popular;
     }
+
+    // Data loaded, switch to ready state
+    app.set_ready();
 
     let res = run_app(&mut terminal, &mut app);
 
@@ -54,7 +68,7 @@ fn run_app(
     loop {
         terminal.draw(|f| ui(f, app))?;
 
-        if event::poll(Duration::from_millis(100))? {
+        if event::poll(Duration::from_millis(50))? {
             if let Event::Key(key) = event::read()? {
                 match key.code {
                     KeyCode::Esc | KeyCode::Char('q') => return Ok(()),

@@ -5,6 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph, Tabs},
     Frame,
 };
+use ratatui_image::picker::Picker;
 
 use crate::backend::mangadex::Manga;
 
@@ -24,8 +25,16 @@ pub enum Focus {
     Popular,
 }
 
-#[derive(Default)]
+#[derive(Clone, Copy, PartialEq, Eq, Default)]
+pub enum AppState {
+    #[default]
+    Loading,
+    Ready,
+}
+
 pub struct App {
+    pub state: AppState,
+    pub loading_message: String,
     pub tab: Tab,
     pub focus: Focus,
     pub search_query: String,
@@ -33,32 +42,128 @@ pub struct App {
     pub popular_offset: usize,
     pub recently_updated: Vec<Manga>,
     pub popular_now: Vec<Manga>,
+    pub picker: Option<Picker>,
+}
+
+impl Default for App {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl App {
     pub fn new() -> Self {
-        Self::default()
+        let picker = Picker::from_query_stdio().ok();
+        
+        Self {
+            state: AppState::Loading,
+            loading_message: "Initializing...".to_string(),
+            tab: Tab::Home,
+            focus: Focus::Header,
+            search_query: String::new(),
+            recent_offset: 0,
+            popular_offset: 0,
+            recently_updated: Vec::new(),
+            popular_now: Vec::new(),
+            picker,
+        }
+    }
+
+    pub fn set_loading(&mut self, message: &str) {
+        self.state = AppState::Loading;
+        self.loading_message = message.to_string();
+    }
+
+    pub fn set_ready(&mut self) {
+        self.state = AppState::Ready;
     }
 }
 
-const CARD_WIDTH: u16 = 30;
-const CARD_HEIGHT: u16 = 12;
+const CARD_WIDTH: u16 = 35;
 
 pub fn ui(f: &mut Frame, app: &mut App) {
+    match app.state {
+        AppState::Loading => draw_loading_screen(f, app),
+        AppState::Ready => draw_main_ui(f, app),
+    }
+}
+
+fn draw_loading_screen(f: &mut Frame, app: &App) {
+    let area = f.area();
+
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .title("Manga Reader")
+        .border_style(Style::default().fg(Color::Cyan));
+
+    let inner = block.inner(area);
+    f.render_widget(block, area);
+
+    let center_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Percentage(40),
+            Constraint::Length(3),
+            Constraint::Length(2),
+            Constraint::Percentage(40),
+        ])
+        .split(inner);
+
+    let spinner_frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+    let frame_idx = (std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis()
+        / 100) as usize
+        % spinner_frames.len();
+
+    let spinner = spinner_frames[frame_idx];
+
+    let loading_text = Line::from(vec![
+        Span::styled(
+            format!(" {} ", spinner),
+            Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+        ),
+        Span::styled(
+            "Loading...",
+            Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+        ),
+    ]);
+
+    let loading_paragraph = Paragraph::new(loading_text).alignment(Alignment::Center);
+    f.render_widget(loading_paragraph, center_layout[1]);
+
+    let message = Paragraph::new(&*app.loading_message)
+        .style(Style::default().fg(Color::DarkGray))
+        .alignment(Alignment::Center);
+    f.render_widget(message, center_layout[2]);
+}
+
+fn draw_main_ui(f: &mut Frame, app: &mut App) {
+    let area = f.area();
+
     let root = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),            // header/tabs
-            Constraint::Length(CARD_HEIGHT + 2), // recently updated
-            Constraint::Length(CARD_HEIGHT + 2), // popular now
-            Constraint::Length(3),            // footer
+            Constraint::Length(3),  // header/tabs
+            Constraint::Min(10),    // content (fills remaining space)
+            Constraint::Length(3),  // footer
         ])
-        .split(f.area());
+        .split(area);
 
     draw_header(f, root[0], app);
+
+    let content_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Percentage(50), // recently updated
+            Constraint::Percentage(50), // popular now
+        ])
+        .split(root[1]);
+
     draw_manga_section(
         f,
-        root[1],
+        content_layout[0],
         "Recently Updated",
         &app.recently_updated,
         &mut app.recent_offset,
@@ -66,13 +171,14 @@ pub fn ui(f: &mut Frame, app: &mut App) {
     );
     draw_manga_section(
         f,
-        root[2],
+        content_layout[1],
         "Popular Now",
         &app.popular_now,
         &mut app.popular_offset,
         app.focus == Focus::Popular,
     );
-    draw_footer(f, root[3]);
+
+    draw_footer(f, root[2]);
 }
 
 fn draw_header(f: &mut Frame, area: Rect, app: &App) {
@@ -84,13 +190,20 @@ fn draw_header(f: &mut Frame, area: Rect, app: &App) {
     };
 
     let header_style = if app.focus == Focus::Header {
-        Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+        Style::default()
+            .fg(Color::Yellow)
+            .add_modifier(Modifier::BOLD)
     } else {
         Style::default().fg(Color::White)
     };
 
     let tabs = Tabs::new(titles)
-        .block(Block::default().borders(Borders::ALL).title("Manga Reader"))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Manga Reader")
+                .border_style(Style::default().fg(Color::Cyan)),
+        )
         .select(selected)
         .style(Style::default().fg(Color::DarkGray))
         .highlight_style(header_style);
@@ -110,7 +223,9 @@ fn draw_manga_section(
         .borders(Borders::ALL)
         .title(title)
         .border_style(if focused {
-            Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD)
         } else {
             Style::default().fg(Color::White)
         });
@@ -119,7 +234,7 @@ fn draw_manga_section(
     f.render_widget(block, area);
 
     if mangas.is_empty() {
-        let loading = Paragraph::new("Loading...")
+        let loading = Paragraph::new("No manga available")
             .alignment(Alignment::Center)
             .style(Style::default().fg(Color::DarkGray));
         f.render_widget(loading, inner);
@@ -156,15 +271,15 @@ fn draw_manga_section(
 
     // Draw scroll indicators
     if *offset > 0 {
-        let left_indicator = Paragraph::new("◀")
-            .style(Style::default().fg(Color::Yellow));
+        let left_indicator =
+            Paragraph::new("◀").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
         let left_area = Rect::new(inner.x, inner.y + inner.height / 2, 1, 1);
         f.render_widget(left_indicator, left_area);
     }
 
     if *offset + cards_visible < mangas.len() {
-        let right_indicator = Paragraph::new("▶")
-            .style(Style::default().fg(Color::Yellow));
+        let right_indicator =
+            Paragraph::new("▶").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
         let right_area = Rect::new(
             inner.x + inner.width.saturating_sub(1),
             inner.y + inner.height / 2,
@@ -177,9 +292,11 @@ fn draw_manga_section(
 
 fn draw_manga_card(f: &mut Frame, area: Rect, manga: &Manga, selected: bool) {
     let border_style = if selected {
-        Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD)
     } else {
-        Style::default().fg(Color::Gray)
+        Style::default().fg(Color::DarkGray)
     };
 
     let block = Block::default()
@@ -189,36 +306,58 @@ fn draw_manga_card(f: &mut Frame, area: Rect, manga: &Manga, selected: bool) {
     let inner = block.inner(area);
     f.render_widget(block, area);
 
-    // Layout: image placeholder, title, description, rating
+    if inner.height < 4 || inner.width < 5 {
+        return;
+    }
+
+    // Layout: image, title, description, rating
     let card_layout = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3), // image placeholder
+            Constraint::Length(6), // image placeholder (larger)
             Constraint::Length(2), // title
-            Constraint::Min(3),    // description
+            Constraint::Min(2),    // description
             Constraint::Length(1), // rating/status
         ])
         .split(inner);
 
-    // Image placeholder
+    // Image placeholder with cover art icon
+    let image_content = vec![
+        Line::from(""),
+        Line::from(Span::styled(
+            "📚",
+            Style::default().fg(Color::Magenta),
+        )),
+        Line::from(Span::styled(
+            "Cover",
+            Style::default().fg(Color::DarkGray),
+        )),
+    ];
     let image_block = Block::default()
         .borders(Borders::ALL)
-        .title("📖")
         .border_style(Style::default().fg(Color::DarkGray));
-    f.render_widget(image_block, card_layout[0]);
+    let image_paragraph = Paragraph::new(image_content)
+        .block(image_block)
+        .alignment(Alignment::Center);
+    f.render_widget(image_paragraph, card_layout[0]);
 
     // Title (truncated)
     let title = truncate_text(&manga.title, (inner.width.saturating_sub(2)) as usize);
     let title_paragraph = Paragraph::new(title)
-        .style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD))
+        .style(
+            Style::default()
+                .fg(Color::White)
+                .add_modifier(Modifier::BOLD),
+        )
         .alignment(Alignment::Left);
     f.render_widget(title_paragraph, card_layout[1]);
 
     // Description (truncated, multi-line)
-    let desc_width = inner.width.saturating_sub(2) as usize;
-    let desc_lines = wrap_text(&manga.description, desc_width, 2);
-    let desc_paragraph = Paragraph::new(desc_lines.join("\n"))
-        .style(Style::default().fg(Color::DarkGray));
+    let desc_width = inner.width.saturating_sub(1) as usize;
+    let max_desc_lines = card_layout[2].height.saturating_sub(0) as usize;
+    let desc_lines = wrap_text(&manga.description, desc_width, max_desc_lines.max(1));
+    let desc_paragraph =
+        Paragraph::new(desc_lines.join("\n")).style(Style::default().fg(Color::DarkGray));
     f.render_widget(desc_paragraph, card_layout[2]);
 
     // Rating/Status line
@@ -234,11 +373,20 @@ fn truncate_text(text: &str, max_len: usize) -> String {
     if text.chars().count() <= max_len {
         text.to_string()
     } else {
-        format!("{}...", text.chars().take(max_len.saturating_sub(3)).collect::<String>())
+        format!(
+            "{}...",
+            text.chars()
+                .take(max_len.saturating_sub(3))
+                .collect::<String>()
+        )
     }
 }
 
 fn wrap_text(text: &str, width: usize, max_lines: usize) -> Vec<String> {
+    if width == 0 || max_lines == 0 {
+        return vec![];
+    }
+
     let mut lines = Vec::new();
     let mut current_line = String::new();
 
@@ -283,7 +431,11 @@ fn draw_footer(f: &mut Frame, area: Rect) {
     ]);
 
     let p = Paragraph::new(text)
-        .block(Block::default().borders(Borders::ALL))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::Cyan)),
+        )
         .alignment(Alignment::Center);
     f.render_widget(p, area);
 }
