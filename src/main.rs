@@ -356,10 +356,20 @@ fn handle_search_tab_input(
             app.search_query.pop();
         }
         KeyCode::Enter => {
-            if !app.search_query.is_empty() && !app.searching {
-                app.searching = true;
-                app.search_results.clear();
-                spawn_search(app.search_query.clone(), task_tx.clone());
+            if app.focus == Focus::Header {
+                // Search when focused on input
+                if !app.search_query.is_empty() && !app.searching {
+                    app.searching = true;
+                    app.search_results.clear();
+                    spawn_search(app.search_query.clone(), task_tx.clone());
+                }
+            } else {
+                // Open manga when focused on results
+                if let Some(manga) = app.search_results.get(app.search_offset).cloned() {
+                    let manga_id = manga.id.clone();
+                    app.open_manga(manga);
+                    spawn_chapters_loader(manga_id, task_tx.clone());
+                }
             }
         }
         KeyCode::Left => {
@@ -401,15 +411,6 @@ fn handle_search_tab_input(
             }
         }
         _ => {}
-    }
-    
-    // Handle Enter on results to open manga
-    if key == KeyCode::Enter && app.focus != Focus::Header {
-        if let Some(manga) = app.search_results.get(app.search_offset).cloned() {
-            let manga_id = manga.id.clone();
-            app.open_manga(manga);
-            spawn_chapters_loader(manga_id, task_tx.clone());
-        }
     }
 }
 
