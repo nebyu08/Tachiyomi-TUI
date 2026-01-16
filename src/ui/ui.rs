@@ -9,6 +9,7 @@ use ratatui::{
 use ratatui_image::{picker::Picker, protocol::StatefulProtocol, Resize, StatefulImage};
 use std::collections::HashMap;
 
+use crate::backend::bookmarks::Bookmarks;
 use crate::backend::mangadex::{Chapter, Manga};
 
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
@@ -60,13 +61,18 @@ pub struct App {
     pub tab: Tab,
     pub focus: Focus,
     pub search_query: String,
+    pub search_results: Vec<Manga>,
+    pub search_offset: usize,
+    pub searching: bool,
     pub recent_offset: usize,
     pub popular_offset: usize,
+    pub bookmark_offset: usize,
     pub recently_updated: Vec<Manga>,
     pub popular_now: Vec<Manga>,
     pub picker: Option<Picker>,
     pub cover_images: HashMap<String, DynamicImage>,
     pub image_states: HashMap<String, StatefulProtocol>,
+    pub bookmarks: Bookmarks,
     
     // Manga detail view
     pub selected_manga: Option<Manga>,
@@ -94,17 +100,36 @@ impl App {
             tab: Tab::Home,
             focus: Focus::Header,
             search_query: String::new(),
+            search_results: Vec::new(),
+            search_offset: 0,
+            searching: false,
             recent_offset: 0,
             popular_offset: 0,
+            bookmark_offset: 0,
             recently_updated: Vec::new(),
             popular_now: Vec::new(),
             picker,
             cover_images: HashMap::new(),
             image_states: HashMap::new(),
+            bookmarks: Bookmarks::load(),
             selected_manga: None,
             chapters: Vec::new(),
             chapter_list_state: ListState::default(),
             reader: ReaderState::default(),
+        }
+    }
+
+    pub fn toggle_bookmark(&mut self) {
+        if let Some(ref manga) = self.selected_manga {
+            self.bookmarks.toggle(manga);
+        }
+    }
+
+    pub fn is_current_bookmarked(&self) -> bool {
+        if let Some(ref manga) = self.selected_manga {
+            self.bookmarks.is_bookmarked(&manga.id)
+        } else {
+            false
         }
     }
 
@@ -294,13 +319,28 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
 
     draw_header(f, root[0], app);
 
+    match app.tab {
+        Tab::Home => draw_home_content(f, root[1], app),
+        Tab::Bookmarks => draw_bookmarks_content(f, root[1], app),
+        Tab::Search => draw_search_content(f, root[1], app),
+    }
+
+    let footer_text = match app.tab {
+        Tab::Home => "Tab: section | ←/→: scroll | ↑/↓: focus | Enter: select | q: quit",
+        Tab::Bookmarks => "←/→: scroll | Enter: select | q: quit",
+        Tab::Search => "Type to search | Enter: search | ←/→: scroll results | q: quit",
+    };
+    draw_footer(f, root[2], footer_text);
+}
+
+fn draw_home_content(f: &mut Frame, area: Rect, app: &mut App) {
     let content_layout = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
             Constraint::Percentage(50), // recently updated
             Constraint::Percentage(50), // popular now
         ])
-        .split(root[1]);
+        .split(area);
 
     draw_manga_section(
         f,
@@ -320,8 +360,183 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
         app.focus == Focus::Popular,
         &mut app.image_states,
     );
+}
 
-    draw_footer(f, root[2], "Tab: section | ←/→: scroll | ↑/↓: focus | Enter: select | q: quit");
+fn draw_bookmarks_content(f: &mut Frame, area: Rect, app: &mut App) {
+    let bookmarked = app.bookmarks.get_bookmarked_manga();
+    
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .title(format!("Bookmarks ({})", bookmarked.len()))
+        .border_style(Style::default().fg(Color::Yellow));
+
+    let inner = block.inner(area);
+    f.render_widget(block, area);
+
+    if bookmarked.is_empty() {
+        let empty_msg = Paragraph::new("No bookmarks yet. Press 'b' on a manga to bookmark it.")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(empty_msg, inner);
+        return;
+    }
+
+    // Clamp offset
+    let max_offset = bookmarked.len().saturating_sub(1);
+    if app.bookmark_offset > max_offset {
+        app.bookmark_offset = max_offset;
+    }
+
+    let available_width = inner.width as usize;
+    let cards_visible = (available_width / CARD_WIDTH as usize).max(1);
+
+    let card_constraints: Vec<Constraint> = (0..cards_visible)
+        .map(|_| Constraint::Length(CARD_WIDTH))
+        .collect();
+
+    let card_areas = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(card_constraints)
+        .split(inner);
+
+    for (i, card_area) in card_areas.iter().enumerate() {
+        let manga_idx = app.bookmark_offset + i;
+        if manga_idx >= bookmarked.len() {
+            break;
+        }
+        let manga = &bookmarked[manga_idx];
+        draw_manga_card(
+            f,
+            *card_area,
+            manga,
+            i == 0,
+            app.image_states.get_mut(&manga.id),
+        );
+    }
+
+    // Scroll indicators
+    if app.bookmark_offset > 0 {
+        let left = Paragraph::new("◀").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        f.render_widget(left, Rect::new(inner.x, inner.y + inner.height / 2, 1, 1));
+    }
+    if app.bookmark_offset + cards_visible < bookmarked.len() {
+        let right = Paragraph::new("▶").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        f.render_widget(right, Rect::new(inner.x + inner.width - 1, inner.y + inner.height / 2, 1, 1));
+    }
+}
+
+fn draw_search_content(f: &mut Frame, area: Rect, app: &mut App) {
+    let layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3), // search input
+            Constraint::Min(5),    // results
+        ])
+        .split(area);
+
+    // Search input
+    let search_style = if app.focus == Focus::Header {
+        Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)
+    } else {
+        Style::default().fg(Color::White)
+    };
+
+    let cursor = if app.focus == Focus::Header { "▌" } else { "" };
+    let search_text = format!("🔍 {}{}", app.search_query, cursor);
+    
+    let search_input = Paragraph::new(search_text)
+        .style(search_style)
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Search Manga")
+                .border_style(Style::default().fg(Color::Cyan)),
+        );
+    f.render_widget(search_input, layout[0]);
+
+    // Results
+    let results_block = Block::default()
+        .borders(Borders::ALL)
+        .title(if app.searching {
+            "Searching...".to_string()
+        } else {
+            format!("Results ({})", app.search_results.len())
+        })
+        .border_style(Style::default().fg(Color::Yellow));
+
+    let inner = results_block.inner(layout[1]);
+    f.render_widget(results_block, layout[1]);
+
+    if app.searching {
+        let spinner_frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+        let frame_idx = (std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis()
+            / 100) as usize
+            % spinner_frames.len();
+        let loading = Paragraph::new(format!("{} Searching...", spinner_frames[frame_idx]))
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::Yellow));
+        f.render_widget(loading, inner);
+        return;
+    }
+
+    if app.search_results.is_empty() {
+        let msg = if app.search_query.is_empty() {
+            "Type a manga name and press Enter to search"
+        } else {
+            "No results found"
+        };
+        let empty = Paragraph::new(msg)
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(empty, inner);
+        return;
+    }
+
+    // Clamp offset
+    let max_offset = app.search_results.len().saturating_sub(1);
+    if app.search_offset > max_offset {
+        app.search_offset = max_offset;
+    }
+
+    let available_width = inner.width as usize;
+    let cards_visible = (available_width / CARD_WIDTH as usize).max(1);
+
+    let card_constraints: Vec<Constraint> = (0..cards_visible)
+        .map(|_| Constraint::Length(CARD_WIDTH))
+        .collect();
+
+    let card_areas = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(card_constraints)
+        .split(inner);
+
+    for (i, card_area) in card_areas.iter().enumerate() {
+        let manga_idx = app.search_offset + i;
+        if manga_idx >= app.search_results.len() {
+            break;
+        }
+        let manga = &app.search_results[manga_idx];
+        draw_manga_card(
+            f,
+            *card_area,
+            manga,
+            i == 0,
+            app.image_states.get_mut(&manga.id),
+        );
+    }
+
+    // Scroll indicators
+    if app.search_offset > 0 {
+        let left = Paragraph::new("◀").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        f.render_widget(left, Rect::new(inner.x, inner.y + inner.height / 2, 1, 1));
+    }
+    if app.search_offset + cards_visible < app.search_results.len() {
+        let right = Paragraph::new("▶").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        f.render_widget(right, Rect::new(inner.x + inner.width - 1, inner.y + inner.height / 2, 1, 1));
+    }
 }
 
 fn draw_manga_detail(f: &mut Frame, app: &mut App) {
@@ -341,8 +556,14 @@ fn draw_manga_detail(f: &mut Frame, app: &mut App) {
         ])
         .split(area);
 
-    // Header with manga title
-    let header = Paragraph::new(manga.title.clone())
+    // Header with manga title and bookmark indicator
+    let bookmark_indicator = if app.is_current_bookmarked() {
+        " ★ Bookmarked"
+    } else {
+        ""
+    };
+    let header_text = format!("{}{}", manga.title, bookmark_indicator);
+    let header = Paragraph::new(header_text)
         .style(Style::default().fg(Color::White).add_modifier(Modifier::BOLD))
         .alignment(Alignment::Center)
         .block(
@@ -443,7 +664,12 @@ fn draw_manga_detail(f: &mut Frame, app: &mut App) {
         f.render_stateful_widget(list, content_layout[1], &mut app.chapter_list_state);
     }
 
-    draw_footer(f, root[2], "↑/↓: select chapter | Enter: read | Esc: back | q: quit");
+    let bookmark_hint = if app.is_current_bookmarked() {
+        "b: unbookmark"
+    } else {
+        "b: bookmark"
+    };
+    draw_footer(f, root[2], &format!("↑/↓: select | Enter: read | {} | Esc: back | q: quit", bookmark_hint));
 }
 
 fn draw_reader(f: &mut Frame, app: &mut App) {

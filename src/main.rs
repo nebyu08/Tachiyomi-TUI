@@ -3,7 +3,7 @@ mod ui;
 
 use backend::mangadex::{
     fetch_cover_image, fetch_page_image, get_chapter_pages, get_manga_chapters,
-    get_popular_now, get_recently_updated, Manga,
+    get_popular_now, get_recently_updated, search_manga, Manga,
 };
 use image::DynamicImage;
 use ui::ui::{App, Focus, Tab, View, ui};
@@ -23,6 +23,7 @@ enum BackgroundTask {
     ChaptersLoaded { chapters: Vec<backend::mangadex::Chapter> },
     PageUrlsLoaded { urls: Vec<String> },
     PageImageLoaded { image: DynamicImage },
+    SearchResults { results: Vec<Manga> },
 }
 
 #[tokio::main]
@@ -120,6 +121,16 @@ fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<Backgroun
     });
 }
 
+fn spawn_search(query: String, tx: mpsc::UnboundedSender<BackgroundTask>) {
+    tokio::spawn(async move {
+        if let Ok(results) = search_manga(&query).await {
+            let _ = tx.send(BackgroundTask::SearchResults { results });
+        } else {
+            let _ = tx.send(BackgroundTask::SearchResults { results: Vec::new() });
+        }
+    });
+}
+
 async fn run_app(
     terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
     app: &mut App,
@@ -176,6 +187,16 @@ async fn run_app(
                     BackgroundTask::PageImageLoaded { image } => {
                         app.set_page_image(image);
                     }
+                    BackgroundTask::SearchResults { results } => {
+                        app.search_results = results;
+                        app.searching = false;
+                        app.search_offset = 0;
+                        // Load covers for search results
+                        spawn_cover_loaders(&app.search_results, 0, 6, task_tx.clone());
+                        for manga in app.search_results.iter().take(6) {
+                            pending_covers.insert(manga.id.clone());
+                        }
+                    }
                 }
             }
         }
@@ -183,6 +204,19 @@ async fn run_app(
 }
 
 fn handle_home_input(
+    app: &mut App,
+    key: KeyCode,
+    pending_covers: &mut std::collections::HashSet<String>,
+    task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+) {
+    match app.tab {
+        Tab::Home => handle_home_tab_input(app, key, pending_covers, task_tx),
+        Tab::Bookmarks => handle_bookmarks_tab_input(app, key, pending_covers, task_tx),
+        Tab::Search => handle_search_tab_input(app, key, pending_covers, task_tx),
+    }
+}
+
+fn handle_home_tab_input(
     app: &mut App,
     key: KeyCode,
     pending_covers: &mut std::collections::HashSet<String>,
@@ -205,11 +239,7 @@ fn handle_home_input(
         }
         KeyCode::Left => match app.focus {
             Focus::Header => {
-                app.tab = match app.tab {
-                    Tab::Home => Tab::Search,
-                    Tab::Bookmarks => Tab::Home,
-                    Tab::Search => Tab::Bookmarks,
-                }
+                app.tab = Tab::Search;
             }
             Focus::Recent => {
                 app.recent_offset = app.recent_offset.saturating_sub(1);
@@ -220,11 +250,7 @@ fn handle_home_input(
         },
         KeyCode::Right => match app.focus {
             Focus::Header => {
-                app.tab = match app.tab {
-                    Tab::Home => Tab::Bookmarks,
-                    Tab::Bookmarks => Tab::Search,
-                    Tab::Search => Tab::Home,
-                }
+                app.tab = Tab::Bookmarks;
             }
             Focus::Recent => {
                 app.recent_offset += 1;
@@ -264,6 +290,129 @@ fn handle_home_input(
     }
 }
 
+fn handle_bookmarks_tab_input(
+    app: &mut App,
+    key: KeyCode,
+    pending_covers: &mut std::collections::HashSet<String>,
+    task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+) {
+    let bookmarked = app.bookmarks.get_bookmarked_manga();
+    
+    match key {
+        KeyCode::Left => {
+            if app.focus == Focus::Header {
+                app.tab = Tab::Home;
+            } else {
+                app.bookmark_offset = app.bookmark_offset.saturating_sub(1);
+            }
+        }
+        KeyCode::Right => {
+            if app.focus == Focus::Header {
+                app.tab = Tab::Search;
+            } else if !bookmarked.is_empty() {
+                let max_offset = bookmarked.len().saturating_sub(1);
+                if app.bookmark_offset < max_offset {
+                    app.bookmark_offset += 1;
+                    preload_covers(
+                        &bookmarked,
+                        app.bookmark_offset,
+                        pending_covers,
+                        &app.image_states,
+                        task_tx.clone(),
+                    );
+                }
+            }
+        }
+        KeyCode::Tab | KeyCode::Down => {
+            app.focus = Focus::Recent;
+        }
+        KeyCode::Up => {
+            app.focus = Focus::Header;
+        }
+        KeyCode::Enter => {
+            if app.focus != Focus::Header {
+                if let Some(manga) = bookmarked.get(app.bookmark_offset).cloned() {
+                    let manga_id = manga.id.clone();
+                    app.open_manga(manga);
+                    spawn_chapters_loader(manga_id, task_tx.clone());
+                }
+            }
+        }
+        _ => {}
+    }
+}
+
+fn handle_search_tab_input(
+    app: &mut App,
+    key: KeyCode,
+    pending_covers: &mut std::collections::HashSet<String>,
+    task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+) {
+    match key {
+        KeyCode::Char(c) => {
+            app.search_query.push(c);
+        }
+        KeyCode::Backspace => {
+            app.search_query.pop();
+        }
+        KeyCode::Enter => {
+            if !app.search_query.is_empty() && !app.searching {
+                app.searching = true;
+                app.search_results.clear();
+                spawn_search(app.search_query.clone(), task_tx.clone());
+            }
+        }
+        KeyCode::Left => {
+            if app.focus == Focus::Header {
+                app.tab = Tab::Bookmarks;
+            } else {
+                app.search_offset = app.search_offset.saturating_sub(1);
+            }
+        }
+        KeyCode::Right => {
+            if app.focus == Focus::Header {
+                app.tab = Tab::Home;
+            } else if !app.search_results.is_empty() {
+                let max_offset = app.search_results.len().saturating_sub(1);
+                if app.search_offset < max_offset {
+                    app.search_offset += 1;
+                    preload_covers(
+                        &app.search_results,
+                        app.search_offset,
+                        pending_covers,
+                        &app.image_states,
+                        task_tx.clone(),
+                    );
+                }
+            }
+        }
+        KeyCode::Tab | KeyCode::Down => {
+            app.focus = Focus::Recent;
+        }
+        KeyCode::Up => {
+            app.focus = Focus::Header;
+        }
+        KeyCode::Esc => {
+            if app.focus != Focus::Header {
+                app.focus = Focus::Header;
+            } else {
+                app.search_query.clear();
+                app.search_results.clear();
+            }
+        }
+        _ => {}
+    }
+    
+    // Handle Enter on results to open manga
+    if key == KeyCode::Enter && app.focus != Focus::Header {
+        if let Some(manga) = app.search_results.get(app.search_offset).cloned() {
+            let manga_id = manga.id.clone();
+            app.open_manga(manga);
+            spawn_chapters_loader(manga_id, task_tx.clone());
+        }
+    }
+}
+
 fn handle_detail_input(
     app: &mut App,
     key: KeyCode,
@@ -293,6 +442,9 @@ fn handle_detail_input(
                     spawn_page_urls_loader(chapter_id, task_tx.clone());
                 }
             }
+        }
+        KeyCode::Char('b') => {
+            app.toggle_bookmark();
         }
         _ => {}
     }
