@@ -209,6 +209,19 @@ pub async fn get_popular_now() -> Result<Vec<Manga>, Error> {
     Ok(parse_manga_list(response))
 }
 
+pub async fn search_manga(query: &str) -> Result<Vec<Manga>, Error> {
+    let encoded_query = urlencoding::encode(query);
+    let url = format!(
+        "{}/manga?includes[]=author&includes[]=artist&includes[]=cover_art&title={}&limit=20",
+        BASE_URL, encoded_query
+    );
+
+    let client = build_client();
+    let response: MangaResponse = client.get(&url).send().await?.json().await?;
+
+    Ok(parse_manga_list(response))
+}
+
 pub async fn get_manga_chapters(manga_id: &str) -> Result<Vec<Chapter>, Error> {
     let url = format!(
         "{}/manga/{}/feed?translatedLanguage[]=en&order[chapter]=desc&limit=100",

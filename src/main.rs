@@ -3,7 +3,7 @@ mod ui;
 
 use backend::mangadex::{
     fetch_cover_image, fetch_page_image, get_chapter_pages, get_manga_chapters,
-    get_popular_now, get_recently_updated, Manga,
+    get_popular_now, get_recently_updated, search_manga, Manga,
 };
 use image::DynamicImage;
 use ui::ui::{App, Focus, Tab, View, ui};
