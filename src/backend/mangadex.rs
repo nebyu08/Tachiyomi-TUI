@@ -1,6 +1,8 @@
+use image::DynamicImage;
 use reqwest::Error;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::io::Cursor;
 
 const BASE_URL: &str = "https://api.mangadex.org";
 
@@ -117,6 +119,25 @@ fn build_client() -> reqwest::Client {
         .user_agent("Tachiyomi-TUI/0.1.0")
         .build()
         .expect("Failed to build HTTP client")
+}
+
+pub async fn fetch_cover_image(cover_url: &str) -> Option<DynamicImage> {
+    if cover_url.is_empty() {
+        return None;
+    }
+
+    // Use thumbnail size (256px) for faster loading
+    let thumb_url = format!("{}.256.jpg", cover_url);
+    
+    let client = build_client();
+    let response = client.get(&thumb_url).send().await.ok()?;
+    let bytes = response.bytes().await.ok()?;
+    
+    image::ImageReader::new(Cursor::new(bytes))
+        .with_guessed_format()
+        .ok()?
+        .decode()
+        .ok()
 }
 
 pub async fn get_recently_updated() -> Result<Vec<Manga>, Error> {

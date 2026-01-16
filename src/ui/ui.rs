@@ -1,3 +1,4 @@
+use image::DynamicImage;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
@@ -5,7 +6,8 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph, Tabs},
     Frame,
 };
-use ratatui_image::picker::Picker;
+use ratatui_image::{picker::Picker, protocol::StatefulProtocol, Resize, StatefulImage};
+use std::collections::HashMap;
 
 use crate::backend::mangadex::Manga;
 
@@ -43,6 +45,8 @@ pub struct App {
     pub recently_updated: Vec<Manga>,
     pub popular_now: Vec<Manga>,
     pub picker: Option<Picker>,
+    pub cover_images: HashMap<String, DynamicImage>,
+    pub image_states: HashMap<String, StatefulProtocol>,
 }
 
 impl Default for App {
@@ -54,7 +58,7 @@ impl Default for App {
 impl App {
     pub fn new() -> Self {
         let picker = Picker::from_query_stdio().ok();
-        
+
         Self {
             state: AppState::Loading,
             loading_message: "Initializing...".to_string(),
@@ -66,6 +70,8 @@ impl App {
             recently_updated: Vec::new(),
             popular_now: Vec::new(),
             picker,
+            cover_images: HashMap::new(),
+            image_states: HashMap::new(),
         }
     }
 
@@ -76,6 +82,15 @@ impl App {
 
     pub fn set_ready(&mut self) {
         self.state = AppState::Ready;
+    }
+
+    pub fn add_cover_image(&mut self, manga_id: &str, image: DynamicImage) {
+        self.cover_images.insert(manga_id.to_string(), image.clone());
+        
+        if let Some(ref picker) = self.picker {
+            let protocol = picker.new_resize_protocol(image);
+            self.image_states.insert(manga_id.to_string(), protocol);
+        }
     }
 }
 
@@ -122,11 +137,15 @@ fn draw_loading_screen(f: &mut Frame, app: &App) {
     let loading_text = Line::from(vec![
         Span::styled(
             format!(" {} ", spinner),
-            Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(Color::Cyan)
+                .add_modifier(Modifier::BOLD),
         ),
         Span::styled(
             "Loading...",
-            Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(Color::White)
+                .add_modifier(Modifier::BOLD),
         ),
     ]);
 
@@ -145,9 +164,9 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
     let root = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),  // header/tabs
-            Constraint::Min(10),    // content (fills remaining space)
-            Constraint::Length(3),  // footer
+            Constraint::Length(3), // header/tabs
+            Constraint::Min(10),   // content (fills remaining space)
+            Constraint::Length(3), // footer
         ])
         .split(area);
 
@@ -168,6 +187,7 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
         &app.recently_updated,
         &mut app.recent_offset,
         app.focus == Focus::Recent,
+        &mut app.image_states,
     );
     draw_manga_section(
         f,
@@ -176,6 +196,7 @@ fn draw_main_ui(f: &mut Frame, app: &mut App) {
         &app.popular_now,
         &mut app.popular_offset,
         app.focus == Focus::Popular,
+        &mut app.image_states,
     );
 
     draw_footer(f, root[2]);
@@ -218,6 +239,7 @@ fn draw_manga_section(
     mangas: &[Manga],
     offset: &mut usize,
     focused: bool,
+    image_states: &mut HashMap<String, StatefulProtocol>,
 ) {
     let block = Block::default()
         .borders(Borders::ALL)
@@ -266,20 +288,33 @@ fn draw_manga_section(
         if manga_idx >= mangas.len() {
             break;
         }
-        draw_manga_card(f, *card_area, &mangas[manga_idx], focused && i == 0);
+        let manga = &mangas[manga_idx];
+        draw_manga_card(
+            f,
+            *card_area,
+            manga,
+            focused && i == 0,
+            image_states.get_mut(&manga.id),
+        );
     }
 
     // Draw scroll indicators
     if *offset > 0 {
-        let left_indicator =
-            Paragraph::new("◀").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        let left_indicator = Paragraph::new("◀").style(
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        );
         let left_area = Rect::new(inner.x, inner.y + inner.height / 2, 1, 1);
         f.render_widget(left_indicator, left_area);
     }
 
     if *offset + cards_visible < mangas.len() {
-        let right_indicator =
-            Paragraph::new("▶").style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+        let right_indicator = Paragraph::new("▶").style(
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        );
         let right_area = Rect::new(
             inner.x + inner.width.saturating_sub(1),
             inner.y + inner.height / 2,
@@ -290,7 +325,13 @@ fn draw_manga_section(
     }
 }
 
-fn draw_manga_card(f: &mut Frame, area: Rect, manga: &Manga, selected: bool) {
+fn draw_manga_card(
+    f: &mut Frame,
+    area: Rect,
+    manga: &Manga,
+    selected: bool,
+    image_state: Option<&mut StatefulProtocol>,
+) {
     let border_style = if selected {
         Style::default()
             .fg(Color::Cyan)
@@ -314,32 +355,36 @@ fn draw_manga_card(f: &mut Frame, area: Rect, manga: &Manga, selected: bool) {
     let card_layout = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(6), // image placeholder (larger)
+            Constraint::Length(8), // image (larger for cover)
             Constraint::Length(2), // title
             Constraint::Min(2),    // description
             Constraint::Length(1), // rating/status
         ])
         .split(inner);
 
-    // Image placeholder with cover art icon
-    let image_content = vec![
-        Line::from(""),
-        Line::from(Span::styled(
-            "📚",
-            Style::default().fg(Color::Magenta),
-        )),
-        Line::from(Span::styled(
-            "Cover",
-            Style::default().fg(Color::DarkGray),
-        )),
-    ];
-    let image_block = Block::default()
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(Color::DarkGray));
-    let image_paragraph = Paragraph::new(image_content)
-        .block(image_block)
-        .alignment(Alignment::Center);
-    f.render_widget(image_paragraph, card_layout[0]);
+    // Render cover image or placeholder
+    if let Some(state) = image_state {
+        let image_widget = StatefulImage::new().resize(Resize::Scale(None));
+        f.render_stateful_widget(image_widget, card_layout[0], state);
+    } else {
+        // Placeholder when image not loaded
+        let image_content = vec![
+            Line::from(""),
+            Line::from(""),
+            Line::from(Span::styled("📚", Style::default().fg(Color::Magenta))),
+            Line::from(Span::styled(
+                "Loading...",
+                Style::default().fg(Color::DarkGray),
+            )),
+        ];
+        let image_block = Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Color::DarkGray));
+        let image_paragraph = Paragraph::new(image_content)
+            .block(image_block)
+            .alignment(Alignment::Center);
+        f.render_widget(image_paragraph, card_layout[0]);
+    }
 
     // Title (truncated)
     let title = truncate_text(&manga.title, (inner.width.saturating_sub(2)) as usize);
@@ -393,16 +438,16 @@ fn wrap_text(text: &str, width: usize, max_lines: usize) -> Vec<String> {
     for word in text.split_whitespace() {
         if current_line.is_empty() {
             current_line = word.to_string();
-        } else if current_line.len() + 1 + word.len() <= width {
+        } else if current_line.chars().count() + 1 + word.chars().count() <= width {
             current_line.push(' ');
             current_line.push_str(word);
         } else {
             lines.push(current_line);
             if lines.len() >= max_lines {
                 if let Some(last) = lines.last_mut() {
-                    if last.len() > 3 {
-                        last.truncate(last.len() - 3);
-                        last.push_str("...");
+                    let char_count = last.chars().count();
+                    if char_count > 3 {
+                        *last = last.chars().take(char_count - 3).collect::<String>() + "...";
                     }
                 }
                 return lines;
