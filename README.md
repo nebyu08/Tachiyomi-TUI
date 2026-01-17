@@ -9,6 +9,14 @@ A modern Terminal User Interface (TUI) for browsing and reading manga from Manga
 - **Visuals**: Full support for manga covers and page images directly in the terminal.
 - **Performance**: Asynchronous data fetching and image loading for a smooth experience.
 
+## Screenshots
+
+<p align="center">
+  <img src="src/images/screen-1.png" alt="Screenshot 1" width="30%">
+  <img src="src/images/screen-2.png" alt="Screenshot 2" width="30%">
+  <img src="src/images/screen-3.png" alt="Screenshot 3" width="30%">
+</p>
+
 ## Technology Stack
 
 - **[Ratatui](https://ratatui.rs/)**: TUI framework for the interface.
