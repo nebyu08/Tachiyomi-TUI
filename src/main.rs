@@ -1,6 +1,7 @@
 mod backend;
 mod ui;
 
+use backend::cache::PageCache;
 use backend::mangadex::{
     fetch_cover_image, fetch_page_image, get_chapter_pages, get_manga_chapters,
     get_popular_now, get_recently_updated, search_manga, Manga,
@@ -25,6 +26,7 @@ enum BackgroundTask {
     PageUrlsLoadFailed,
     PageImageLoaded { image: DynamicImage },
     PageImageLoadFailed,
+    PagePreloaded { page_url: String },
     SearchResults { results: Vec<Manga> },
 }
 
@@ -37,6 +39,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     let mut app = App::new();
+    let cache = PageCache::new();
 
     // Create channel for background tasks
     let (task_tx, mut task_rx) = mpsc::unbounded_channel::<BackgroundTask>();
@@ -67,7 +70,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Data loaded, switch to ready state
     app.set_ready();
 
-    let res = run_app(&mut terminal, &mut app, &mut task_rx, task_tx).await;
+    let res = run_app(&mut terminal, &mut app, &mut task_rx, task_tx, cache).await;
 
     // Restore terminal
     disable_raw_mode()?;
@@ -107,10 +110,16 @@ fn spawn_chapters_loader(manga_id: String, tx: mpsc::UnboundedSender<BackgroundT
     });
 }
 
-fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<BackgroundTask>) {
+fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
     tokio::spawn(async move {
+        if let Some(cached_urls) = cache.get_chapter_urls(&chapter_id).await {
+            let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls: cached_urls });
+            return;
+        }
+
         match get_chapter_pages(&chapter_id).await {
             Some(urls) if !urls.is_empty() => {
+                cache.insert_chapter_urls(chapter_id, urls.clone()).await;
                 let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls });
             }
             _ => {
@@ -120,11 +129,17 @@ fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<Backgrou
     });
 }
 
-fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<BackgroundTask>) {
+fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
     tokio::spawn(async move {
+        if let Some(cached_image) = cache.get_page(&page_url).await {
+            let _ = tx.send(BackgroundTask::PageImageLoaded { image: cached_image });
+            return;
+        }
+
         const MAX_RETRIES: u32 = 3;
         for attempt in 0..MAX_RETRIES {
             if let Some(image) = fetch_page_image(&page_url).await {
+                cache.insert_page(page_url, image.clone()).await;
                 let _ = tx.send(BackgroundTask::PageImageLoaded { image });
                 return;
             }
@@ -133,6 +148,20 @@ fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<Backgroun
             }
         }
         let _ = tx.send(BackgroundTask::PageImageLoadFailed);
+    });
+}
+
+fn spawn_page_preloader(page_url: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
+    tokio::spawn(async move {
+        if cache.has_page(&page_url).await {
+            let _ = tx.send(BackgroundTask::PagePreloaded { page_url });
+            return;
+        }
+
+        if let Some(image) = fetch_page_image(&page_url).await {
+            cache.insert_page(page_url.clone(), image).await;
+            let _ = tx.send(BackgroundTask::PagePreloaded { page_url });
+        }
     });
 }
 
@@ -151,9 +180,11 @@ async fn run_app(
     app: &mut App,
     task_rx: &mut mpsc::UnboundedReceiver<BackgroundTask>,
     task_tx: mpsc::UnboundedSender<BackgroundTask>,
+    cache: PageCache,
 ) -> io::Result<()> {
     let mut event_stream = EventStream::new();
     let mut pending_covers: std::collections::HashSet<String> = std::collections::HashSet::new();
+    let mut preloading_pages: std::collections::HashSet<String> = std::collections::HashSet::new();
 
     // Track which manga IDs are already loading
     for manga in app.recently_updated.iter().take(6) {
@@ -191,9 +222,9 @@ async fn run_app(
             Some(Ok(event)) = event_stream.next() => {
                 if let Event::Key(key) = event {
                     match app.view {
-                        View::Home => handle_home_input(app, key.code, &mut pending_covers, &task_tx),
-                        View::MangaDetail => handle_detail_input(app, key.code, &task_tx),
-                        View::Reader => handle_reader_input(app, key.code, &task_tx),
+                        View::Home => handle_home_input(app, key.code, &mut pending_covers, &task_tx, &cache),
+                        View::MangaDetail => handle_detail_input(app, key.code, &task_tx, &cache),
+                        View::Reader => handle_reader_input(app, key.code, &task_tx, &cache, &mut preloading_pages),
                     }
                     
                     if key.code == KeyCode::Char('q') {
@@ -217,17 +248,36 @@ async fn run_app(
                         app.reader.error = None;
                         // Load first page
                         if let Some(url) = app.reader.page_urls.first() {
-                            spawn_page_image_loader(url.clone(), task_tx.clone());
+                            spawn_page_image_loader(url.clone(), task_tx.clone(), cache.clone());
                         }
+                        // Preload next few pages in background
+                        preload_upcoming_pages(
+                            &app.reader.page_urls,
+                            0,
+                            &mut preloading_pages,
+                            &task_tx,
+                            &cache,
+                        );
                     }
                     BackgroundTask::PageUrlsLoadFailed => {
                         app.set_page_load_error("Failed to load chapter pages. Press 'r' to retry.".to_string());
                     }
                     BackgroundTask::PageImageLoaded { image } => {
                         app.set_page_image(image);
+                        // Preload upcoming pages when current page loads
+                        preload_upcoming_pages(
+                            &app.reader.page_urls,
+                            app.reader.current_page,
+                            &mut preloading_pages,
+                            &task_tx,
+                            &cache,
+                        );
                     }
                     BackgroundTask::PageImageLoadFailed => {
                         app.set_page_load_error("Failed to load page image. Press 'r' to retry.".to_string());
+                    }
+                    BackgroundTask::PagePreloaded { page_url } => {
+                        preloading_pages.remove(&page_url);
                     }
                     BackgroundTask::SearchResults { results } => {
                         app.search_results = results;
@@ -250,11 +300,12 @@ fn handle_home_input(
     key: KeyCode,
     pending_covers: &mut std::collections::HashSet<String>,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    cache: &PageCache,
 ) {
     match app.tab {
-        Tab::Home => handle_home_tab_input(app, key, pending_covers, task_tx),
-        Tab::Bookmarks => handle_bookmarks_tab_input(app, key, pending_covers, task_tx),
-        Tab::Search => handle_search_tab_input(app, key, pending_covers, task_tx),
+        Tab::Home => handle_home_tab_input(app, key, pending_covers, task_tx, cache),
+        Tab::Bookmarks => handle_bookmarks_tab_input(app, key, pending_covers, task_tx, cache),
+        Tab::Search => handle_search_tab_input(app, key, pending_covers, task_tx, cache),
     }
 }
 
@@ -263,6 +314,7 @@ fn handle_home_tab_input(
     key: KeyCode,
     pending_covers: &mut std::collections::HashSet<String>,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    _cache: &PageCache,
 ) {
     match key {
         KeyCode::Tab | KeyCode::Down => {
@@ -337,6 +389,7 @@ fn handle_bookmarks_tab_input(
     key: KeyCode,
     pending_covers: &mut std::collections::HashSet<String>,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    _cache: &PageCache,
 ) {
     let bookmarked = app.bookmarks.get_bookmarked_manga();
     
@@ -389,6 +442,7 @@ fn handle_search_tab_input(
     key: KeyCode,
     pending_covers: &mut std::collections::HashSet<String>,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    _cache: &PageCache,
 ) {
     match key {
         KeyCode::Char(c) => {
@@ -469,6 +523,7 @@ fn handle_detail_input(
     app: &mut App,
     key: KeyCode,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    cache: &PageCache,
 ) {
     match key {
         KeyCode::Esc => {
@@ -491,7 +546,7 @@ fn handle_detail_input(
                 if let Some(chapter) = app.chapters.get(selected) {
                     let chapter_id = chapter.id.clone();
                     app.open_reader(selected);
-                    spawn_page_urls_loader(chapter_id, task_tx.clone());
+                    spawn_page_urls_loader(chapter_id, task_tx.clone(), cache.clone());
                 }
             }
         }
@@ -506,6 +561,8 @@ fn handle_reader_input(
     app: &mut App,
     key: KeyCode,
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    cache: &PageCache,
+    preloading_pages: &mut std::collections::HashSet<String>,
 ) {
     match key {
         KeyCode::Esc => {
@@ -514,28 +571,35 @@ fn handle_reader_input(
         KeyCode::Left => {
             if app.prev_page() {
                 if let Some(url) = app.reader.page_urls.get(app.reader.current_page) {
-                    spawn_page_image_loader(url.clone(), task_tx.clone());
+                    spawn_page_image_loader(url.clone(), task_tx.clone(), cache.clone());
                 }
             }
         }
         KeyCode::Right => {
             if app.next_page() {
                 if let Some(url) = app.reader.page_urls.get(app.reader.current_page) {
-                    spawn_page_image_loader(url.clone(), task_tx.clone());
+                    spawn_page_image_loader(url.clone(), task_tx.clone(), cache.clone());
                 }
+                preload_upcoming_pages(
+                    &app.reader.page_urls,
+                    app.reader.current_page,
+                    preloading_pages,
+                    task_tx,
+                    cache,
+                );
             }
         }
         KeyCode::Char('n') => {
             if app.next_chapter() {
                 if let Some(chapter) = app.reader.chapters.get(app.reader.current_chapter_idx) {
-                    spawn_page_urls_loader(chapter.id.clone(), task_tx.clone());
+                    spawn_page_urls_loader(chapter.id.clone(), task_tx.clone(), cache.clone());
                 }
             }
         }
         KeyCode::Char('p') => {
             if app.prev_chapter() {
                 if let Some(chapter) = app.reader.chapters.get(app.reader.current_chapter_idx) {
-                    spawn_page_urls_loader(chapter.id.clone(), task_tx.clone());
+                    spawn_page_urls_loader(chapter.id.clone(), task_tx.clone(), cache.clone());
                 }
             }
         }
@@ -544,13 +608,11 @@ fn handle_reader_input(
                 app.reader.loading = true;
                 app.reader.error = None;
                 if app.reader.page_urls.is_empty() {
-                    // Retry loading chapter pages
                     if let Some(chapter) = app.reader.chapters.get(app.reader.current_chapter_idx) {
-                        spawn_page_urls_loader(chapter.id.clone(), task_tx.clone());
+                        spawn_page_urls_loader(chapter.id.clone(), task_tx.clone(), cache.clone());
                     }
                 } else if let Some(url) = app.reader.page_urls.get(app.reader.current_page) {
-                    // Retry loading page image
-                    spawn_page_image_loader(url.clone(), task_tx.clone());
+                    spawn_page_image_loader(url.clone(), task_tx.clone(), cache.clone());
                 }
             }
         }
@@ -577,6 +639,23 @@ fn preload_covers(
                     let _ = tx.send(BackgroundTask::CoverLoaded { manga_id, image });
                 }
             });
+        }
+    }
+}
+
+fn preload_upcoming_pages(
+    page_urls: &[String],
+    current_page: usize,
+    preloading: &mut std::collections::HashSet<String>,
+    tx: &mpsc::UnboundedSender<BackgroundTask>,
+    cache: &PageCache,
+) {
+    const PRELOAD_AHEAD: usize = 3;
+
+    for url in page_urls.iter().skip(current_page + 1).take(PRELOAD_AHEAD) {
+        if !preloading.contains(url) {
+            preloading.insert(url.clone());
+            spawn_page_preloader(url.clone(), tx.clone(), cache.clone());
         }
     }
 }
