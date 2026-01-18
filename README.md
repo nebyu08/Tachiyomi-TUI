@@ -64,3 +64,7 @@ cargo run --release
 ## License
 
 MIT
+
+## Credits
+
+This project uses the [MangaDex API](https://api.mangadex.org/) to fetch manga data and images. Thanks to the MangaDex team for providing a free and open API for the manga community.
