@@ -1,0 +1,1043 @@
+   Compiling home v0.5.12
+   Compiling webbrowser v0.8.15
+   Compiling Tachiyomi-TUI v0.1.0 (/home/morgano/Software/Tachiyomi-TUI)
+    Finished `release` profile [optimized] target(s) in 3.33s
+     Running `target/release/Tachiyomi-TUI`
+[2026-01-19T00:32:09Z INFO  Tachiyomi_TUI] Starting manga reader...
+[2026-01-19T00:32:09Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:09Z DEBUG reqwest::connect] starting new connection: https://api.mangadex.org/
+[2026-01-19T00:32:10Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:10Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:10Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:10Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:10Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:10Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", api.mangadex.org)
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:10Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:10Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:10Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:10Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:10Z DEBUG reqwest::connect] starting new connection: https://api.mangadex.org/
+[2026-01-19T00:32:10Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", api.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:11Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:11Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:11Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:12Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:12Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:12Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:12Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:12Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:12Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:12Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:12Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:12Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:12Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:12Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:12Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:12Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:12Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:12Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:13Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:13Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:13Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:13Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:13Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:13Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:13Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:13Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:13Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:13Z DEBUG reqwest::connect] starting new connection: https://uploads.mangadex.org/
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:13Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:13Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:13Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:32:14Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:14Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:14Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:14Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", uploads.mangadex.org)
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:14Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:14Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:14Z DEBUG Tachiyomi_TUI::backend::mangadex] Fetching chapters from: https://api.mangadex.org/manga/a77742b1-befd-49a4-bff5-1ad4e6b0ef7b/feed?translatedLanguage[]=en&order[chapter]=desc&limit=100
+[2026-01-19T00:32:14Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:14Z DEBUG reqwest::connect] starting new connection: https://api.mangadex.org/
+[2026-01-19T00:32:14Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:14Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:14Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:14Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:14Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:14Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", api.mangadex.org)
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:14Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG Tachiyomi_TUI::backend::mangadex] Response status: 200 OK
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:14Z DEBUG Tachiyomi_TUI::backend::mangadex] Raw chapters response; first chapter and last (100th) chapter : c61ad16b-5c06-4bf9-97ac-aeb617589ff9, 419b4589-4c48-4d63-9fcc-63fa86cd87ad
+[2026-01-19T00:32:14Z DEBUG Tachiyomi_TUI::backend::mangadex] 0
+[2026-01-19T00:32:14Z DEBUG Tachiyomi_TUI::backend::mangadex] Chapters successfully processed; first chapter and last (100th) chapter : Locust's Home, No Title
+[2026-01-19T00:32:14Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:14Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI] Loading page URLs for chapter: d70dc082-7b8c-48ea-87bd-2fa8beaf6fb6
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI] Fetching page URLs from API for chapter: d70dc082-7b8c-48ea-87bd-2fa8beaf6fb6
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI::backend::mangadex] Fetching from URL: https://api.mangadex.org/at-home/server/d70dc082-7b8c-48ea-87bd-2fa8beaf6fb6
+[2026-01-19T00:32:17Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:17Z DEBUG reqwest::connect] starting new connection: https://api.mangadex.org/
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.2:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.2:443
+[2026-01-19T00:32:17Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:17Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:17Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", api.mangadex.org)
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:17Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI::backend::mangadex] Response status: 200 OK
+[2026-01-19T00:32:17Z INFO  Tachiyomi_TUI] Loaded 20 page URLs for chapter d70dc082-7b8c-48ea-87bd-2fa8beaf6fb6
+[2026-01-19T00:32:17Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI] Loading page image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/1-2e6a57c2fbd4d9b5971c7c46451d56896eb44cf8f36b71daf3002333b7ae9b6e.jpg
+[2026-01-19T00:32:17Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:17Z DEBUG Tachiyomi_TUI] Attempt 1 to fetch image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/1-2e6a57c2fbd4d9b5971c7c46451d56896eb44cf8f36b71daf3002333b7ae9b6e.jpg
+[2026-01-19T00:32:17Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:17Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:17Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:17Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:17Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:17Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:17Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:17Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:17Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:18Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:18Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:18Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:18Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:18Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:18Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:18Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:18Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:18Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:18Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:18Z INFO  Tachiyomi_TUI] Successfully loaded image (attempt 1)
+[2026-01-19T00:32:18Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:18Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:19Z DEBUG Tachiyomi_TUI] Loading page image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/2-4d5f6fae0c514780a2c90fd150c6e55f5200f7ef2509f80f8ddffb6c6f12b48b.jpg
+[2026-01-19T00:32:19Z DEBUG Tachiyomi_TUI] Found cached image for: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/2-4d5f6fae0c514780a2c90fd150c6e55f5200f7ef2509f80f8ddffb6c6f12b48b.jpg
+[2026-01-19T00:32:19Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:19Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:19Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:19Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:19Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:19Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:19Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:19Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:19Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:19Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Loading page image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/3-9ee6c4bf8ed47324b21198425fb65bb59648f71068e91c71ae72f4eab13adf8e.jpg
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Found cached image for: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/3-9ee6c4bf8ed47324b21198425fb65bb59648f71068e91c71ae72f4eab13adf8e.jpg
+[2026-01-19T00:32:20Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:20Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connecting to 172.67.73.44:443
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connected to 172.67.73.44:443
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:20Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:20Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Loading page image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/4-346769ef049879cc1c8e54f9a0a8090a5c85da47d67e1569b8cbaecac9825f05.jpg
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Found cached image for: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/4-346769ef049879cc1c8e54f9a0a8090a5c85da47d67e1569b8cbaecac9825f05.jpg
+[2026-01-19T00:32:20Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:20Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connecting to 104.26.3.73:443
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connected to 104.26.3.73:443
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:20Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:20Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Loading page image: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/5-75bf2179b3d9fd1ef75a6e5f0b1a240d9b6047786f148de566acef456328a957.jpg
+[2026-01-19T00:32:20Z DEBUG Tachiyomi_TUI] Found cached image for: https://cmdxd98sb0x3yprd.mangadex.network/data-saver/eea72e48d70588bf75ad627b20f16de3/5-75bf2179b3d9fd1ef75a6e5f0b1a240d9b6047786f148de566acef456328a957.jpg
+[2026-01-19T00:32:20Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:32:20Z DEBUG reqwest::connect] starting new connection: https://cmdxd98sb0x3yprd.mangadex.network/
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connecting to 104.26.2.73:443
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::connect::http] connected to 104.26.2.73:443
+[2026-01-19T00:32:20Z DEBUG h2::client] binding client connection
+[2026-01-19T00:32:20Z DEBUG h2::client] client connection bound
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:20Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:32:20Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", cmdxd98sb0x3yprd.mangadex.network)
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 100, initial_window_size: 65536, max_frame_size: 16777215 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=WindowUpdate { stream_id: StreamId(0), size_increment: 2147418112 }
+[2026-01-19T00:32:20Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:32:20Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:21Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:32:21Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:32:21Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:32:27Z WARN  Tachiyomi_TUI] Chapter is external and cannot be read in-app: https://mangaplus.shueisha.co.jp/viewer/1027296
+[2026-01-19T00:32:27Z DEBUG webbrowser::common] background spawn: "/usr/lib/firefox/firefox" "https://mangaplus.shueisha.co.jp/viewer/1027296"
+[2026-01-19T00:35:32Z DEBUG Tachiyomi_TUI::backend::mangadex] Fetching chapters from: https://api.mangadex.org/manga/32d76d19-8a05-4db0-9fc2-e0b0648fe9d0/feed?translatedLanguage[]=en&order[chapter]=desc&limit=100
+[2026-01-19T00:35:32Z DEBUG rustls_platform_verifier::verification::others] Loaded 144 CA root certificates from the system
+[2026-01-19T00:35:32Z DEBUG reqwest::connect] starting new connection: https://api.mangadex.org/
+[2026-01-19T00:35:33Z DEBUG hyper_util::client::legacy::connect::http] connecting to 45.129.229.1:443
+[2026-01-19T00:35:33Z DEBUG hyper_util::client::legacy::connect::http] connected to 45.129.229.1:443
+[2026-01-19T00:35:33Z DEBUG h2::client] binding client connection
+[2026-01-19T00:35:33Z DEBUG h2::client] client connection bound
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:35:33Z DEBUG h2::proto::connection] Connection; peer=Client
+[2026-01-19T00:35:33Z DEBUG hyper_util::client::legacy::pool] pooling idle connection for ("https", api.mangadex.org)
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_write] send frame=WindowUpdate { stream_id: StreamId(0), size_increment: 5177345 }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_write] send frame=Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x0), max_concurrent_streams: 10, initial_window_size: 65488, max_frame_size: 65536, enable_connect_protocol: 1 }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_write] send frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_read] received frame=Settings { flags: (0x1: ACK) }
+[2026-01-19T00:35:33Z DEBUG h2::proto::settings] received settings ACK; applying Settings { flags: (0x0), enable_push: 0, initial_window_size: 2097152, max_frame_size: 16384, max_header_list_size: 16384 }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_read] received frame=Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1) }
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_read] received frame=Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }
+[2026-01-19T00:35:33Z DEBUG Tachiyomi_TUI::backend::mangadex] Response status: 200 OK
+[2026-01-19T00:35:33Z DEBUG Tachiyomi_TUI::backend::mangadex] Raw chapters response; first chapter and last (24th) chapter : f7d2cb75-83b2-426b-bdbd-032870c30abb, ecd2e5b0-e100-49c6-968a-d39ba41c598e
+[2026-01-19T00:35:33Z DEBUG Tachiyomi_TUI::backend::mangadex] 0
+[2026-01-19T00:35:33Z DEBUG Tachiyomi_TUI::backend::mangadex] Chapters successfully processed; first chapter and last (24th) chapter : Dungeon Boss, No Title
+[2026-01-19T00:35:33Z DEBUG h2::codec::framed_write] send frame=GoAway { error_code: NO_ERROR, last_stream_id: StreamId(0) }
+[2026-01-19T00:35:33Z DEBUG h2::proto::connection] Connection::poll; connection error error=GoAway(b"", NO_ERROR, Library)
+[2026-01-19T00:35:35Z WARN  Tachiyomi_TUI] Chapter is external and cannot be read in-app: https://www.webnovel.com/comic/15227640605485101/45196913229757563
+[2026-01-19T00:35:35Z DEBUG webbrowser::common] background spawn: "/usr/lib/firefox/firefox" "https://www.webnovel.com/comic/15227640605485101/45196913229757563"
