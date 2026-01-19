@@ -661,8 +661,14 @@ fn draw_manga_detail(f: &mut Frame, app: &mut App) {
             .iter()
             .map(|ch| {
                 let vol = ch.volume.as_ref().map(|v| format!("Vol.{} ", v)).unwrap_or_default();
+                let tag = if ch.external_url.is_some() {
+                    Span::styled("[External] ", Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD))
+                } else {
+                    Span::raw("")
+                };
                 let text = format!("{}Ch.{} - {} ({} pages)", vol, ch.chapter, ch.title, ch.pages);
-                ListItem::new(truncate_text(&text, 60))
+                let line = Line::from(vec![tag, Span::raw(truncate_text(&text, 60))]);
+                ListItem::new(line)
             })
             .collect();
 

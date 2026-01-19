@@ -13,6 +13,7 @@ pub struct Chapter {
     pub title: String,
     pub volume: Option<String>,
     pub pages: usize,
+    pub external_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -34,6 +35,8 @@ struct ChapterAttributes {
     pages: usize,
     #[serde(rename = "translatedLanguage")]
     _translated_language: String,
+    #[serde(rename = "externalUrl")]
+    external_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -46,6 +49,7 @@ struct AtHomeResponse {
 #[derive(Debug, Deserialize)]
 struct AtHomeChapter {
     hash: String,
+    #[serde(rename = "data")]
     _data: Vec<String>,
     #[serde(rename = "dataSaver")]
     data_saver: Vec<String>,
@@ -231,30 +235,77 @@ pub async fn get_manga_chapters(manga_id: &str) -> Result<Vec<Chapter>, Error> {
         BASE_URL, manga_id
     );
 
-    let client = build_client();
-    let response: ChapterResponse = client.get(&url).send().await?.json().await?;
+    log::debug!("Fetching chapters from: {}", url);
 
-    let chapters = response
+    let client = build_client();
+    let unparsed_response = match client.get(&url).send().await {
+         Ok(resp) => {
+            log::debug!("Response status: {}", resp.status());
+            resp
+        }
+        Err(e) => {
+            log::error!("Network error fetching chapters: {}", e);
+            return Err(e);
+        }
+    };
+
+    let response: ChapterResponse = match unparsed_response.json::<ChapterResponse>().await {
+        Ok(text) => {
+            log::debug!("Raw chapters response; first chapter and last ({}th) chapter : {}, {}", &text.data.len(), &text.data[0].id, &text.data.last().unwrap().id);
+            text
+        }
+        Err(e) => {
+            log::error!("Failed to read response text: {}", e);
+            return Err(e);
+        }
+    };
+
+    log::debug!("{}", &response.data[0].attributes.pages);
+
+    let chapters: Vec<Chapter> = response
         .data
         .into_iter()
-        .filter(|c| c.attributes.pages > 0)
+        .filter(|c| c.attributes.pages > 0 || c.attributes.external_url.is_some())
         .map(|c| Chapter {
             id: c.id,
             chapter: c.attributes.chapter.unwrap_or_else(|| "0".to_string()),
             title: c.attributes.title.unwrap_or_else(|| "No Title".to_string()),
             volume: c.attributes.volume,
             pages: c.attributes.pages,
+            external_url: c.attributes.external_url,
         })
         .collect();
-
+    
+    log::debug!("Chapters successfully processed; first chapter and last ({}th) chapter : {}, {}", &chapters.len(), &chapters[0].title, &chapters.last().unwrap().title);
     Ok(chapters)
 }
 
 pub async fn get_chapter_pages(chapter_id: &str) -> Option<Vec<String>> {
     let url = format!("{}/at-home/server/{}", BASE_URL, chapter_id);
+    log::debug!("Fetching from URL: {}", url);
 
     let client = build_client();
-    let response: AtHomeResponse = client.get(&url).send().await.ok()?.json().await.ok()?;
+    let unparsed_response: reqwest::Response = match client.get(&url).send().await {
+        Ok(resp) => {
+            log::debug!("Response status: {}", resp.status());
+            resp
+        }
+        Err(e) => {
+            log::error!("Network error: {}", e);
+            return None;
+        }
+    };
+    
+    let response: AtHomeResponse = match unparsed_response.json::<AtHomeResponse>().await {
+        Ok(resp) => {
+            log::trace!("Response url: {}", resp.base_url);
+            resp
+        }
+        Err(e) => {
+            log::error!("Parsing error: {}", e);
+            return None
+        }
+    };
 
     let pages = response
         .chapter
@@ -334,4 +385,22 @@ mod tests {
             );
         }
     }
+
+    // #[tokio::test]
+    // async fn test_api_structure() {
+    //     use serde_json::Value;
+        
+    //     let test_chapter_id = "77fc6e02-a381-411d-ace6-4c00deacadb4";
+    //     let url = format!("{}/at-home/server/{}", BASE_URL, test_chapter_id);
+        
+    //     let client = build_client();
+    //     if let Ok(response) = client.get(&url).send().await {
+    //         if let Ok(text) = response.text().await {
+    //             // Parse as generic JSON to see structure
+    //             if let Ok(json) = serde_json::from_str::<Value>(&text) {
+    //                 println!("API Response structure:\n{:#?}", json);
+    //             }
+    //         }
+    //     }
+    // }
 }

@@ -32,6 +32,9 @@ enum BackgroundTask {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+    log::debug!("Starting manga reader...");
+
     enable_raw_mode()?;
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen)?;
@@ -111,18 +114,28 @@ fn spawn_chapters_loader(manga_id: String, tx: mpsc::UnboundedSender<BackgroundT
 }
 
 fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
+    log::debug!("Loading page URLs for chapter: {}", chapter_id);
     tokio::spawn(async move {
         if let Some(cached_urls) = cache.get_chapter_urls(&chapter_id).await {
+            log::debug!("Found cached URLs for chapter {}: {} pages", chapter_id, cached_urls.len());
             let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls: cached_urls });
             return;
         }
 
+        log::debug!("Fetching page URLs from API for chapter: {}", chapter_id);
         match get_chapter_pages(&chapter_id).await {
-            Some(urls) if !urls.is_empty() => {
-                cache.insert_chapter_urls(chapter_id, urls.clone()).await;
-                let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls });
+            Some(urls) => {
+                if !urls.is_empty() {
+                    log::debug!("Loaded {} page URLs for chapter {}", urls.len(), chapter_id);
+                    cache.insert_chapter_urls(chapter_id, urls.clone()).await;
+                    let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls });
+                } else {
+                    log::error!("Chapter {} has empty page URLs", chapter_id);
+                    let _ = tx.send(BackgroundTask::PageUrlsLoadFailed);
+                }
             }
-            _ => {
+            None => {
+                log::error!("Failed to fetch page URLs for chapter {}", chapter_id);
                 let _ = tx.send(BackgroundTask::PageUrlsLoadFailed);
             }
         }
@@ -130,23 +143,30 @@ fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<Backgrou
 }
 
 fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
+    log::debug!("Loading page image: {}", page_url);
     tokio::spawn(async move {
         if let Some(cached_image) = cache.get_page(&page_url).await {
+            log::debug!("Found cached image for: {}", page_url);
             let _ = tx.send(BackgroundTask::PageImageLoaded { image: cached_image });
             return;
         }
 
         const MAX_RETRIES: u32 = 3;
         for attempt in 0..MAX_RETRIES {
+            log::debug!("Attempt {} to fetch image: {}", attempt + 1, page_url);
             if let Some(image) = fetch_page_image(&page_url).await {
+                log::debug!("Successfully loaded image (attempt {})", attempt + 1);
                 cache.insert_page(page_url, image.clone()).await;
                 let _ = tx.send(BackgroundTask::PageImageLoaded { image });
                 return;
             }
             if attempt < MAX_RETRIES - 1 {
-                tokio::time::sleep(tokio::time::Duration::from_millis(500 * (attempt as u64 + 1))).await;
+                let delay = 500 * (attempt as u64 + 1);
+                log::warn!("Image fetch failed, retrying in {}ms", delay);
+                tokio::time::sleep(tokio::time::Duration::from_millis(delay)).await;
             }
         }
+        log::error!("Failed to load image after {} retries: {}", MAX_RETRIES, page_url);
         let _ = tx.send(BackgroundTask::PageImageLoadFailed);
     });
 }
@@ -544,9 +564,14 @@ fn handle_detail_input(
         KeyCode::Enter => {
             if let Some(selected) = app.chapter_list_state.selected() {
                 if let Some(chapter) = app.chapters.get(selected) {
-                    let chapter_id = chapter.id.clone();
-                    app.open_reader(selected);
-                    spawn_page_urls_loader(chapter_id, task_tx.clone(), cache.clone());
+                    if let Some(external_url) = &chapter.external_url {
+                        log::debug!("Chapter is external and cannot be read in-app: {}", external_url);
+                        webbrowser::open(external_url).ok();
+                    } else {
+                        let chapter_id = chapter.id.clone();
+                        app.open_reader(selected);
+                        spawn_page_urls_loader(chapter_id, task_tx.clone(), cache.clone());
+                    }
                 }
             }
         }
