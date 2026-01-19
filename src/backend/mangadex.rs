@@ -231,7 +231,7 @@ pub async fn search_manga(query: &str) -> Result<Vec<Manga>, Error> {
 
 pub async fn get_manga_chapters(manga_id: &str) -> Result<Vec<Chapter>, Error> {
     let url = format!(
-        "{}/manga/{}/feed?translatedLanguage[]=en&order[chapter]=desc&limit=100",
+        "{}/manga/{}/feed?translatedLanguage[]=en&order[chapter]=asc&limit=100",
         BASE_URL, manga_id
     );
 
