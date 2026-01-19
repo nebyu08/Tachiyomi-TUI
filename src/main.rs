@@ -33,7 +33,7 @@ enum BackgroundTask {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
-    log::info!("Starting manga reader...");
+    log::debug!("Starting manga reader...");
 
     enable_raw_mode()?;
     let mut stdout = io::stdout();
@@ -126,7 +126,7 @@ fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<Backgrou
         match get_chapter_pages(&chapter_id).await {
             Some(urls) => {
                 if !urls.is_empty() {
-                    log::info!("Loaded {} page URLs for chapter {}", urls.len(), chapter_id);
+                    log::debug!("Loaded {} page URLs for chapter {}", urls.len(), chapter_id);
                     cache.insert_chapter_urls(chapter_id, urls.clone()).await;
                     let _ = tx.send(BackgroundTask::PageUrlsLoaded { urls });
                 } else {
@@ -155,7 +155,7 @@ fn spawn_page_image_loader(page_url: String, tx: mpsc::UnboundedSender<Backgroun
         for attempt in 0..MAX_RETRIES {
             log::debug!("Attempt {} to fetch image: {}", attempt + 1, page_url);
             if let Some(image) = fetch_page_image(&page_url).await {
-                log::info!("Successfully loaded image (attempt {})", attempt + 1);
+                log::debug!("Successfully loaded image (attempt {})", attempt + 1);
                 cache.insert_page(page_url, image.clone()).await;
                 let _ = tx.send(BackgroundTask::PageImageLoaded { image });
                 return;
