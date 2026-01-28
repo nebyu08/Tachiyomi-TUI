@@ -22,6 +22,7 @@ use tokio::sync::mpsc;
 enum BackgroundTask {
     CoverLoaded { manga_id: String, image: DynamicImage },
     ChaptersLoaded { chapters: Vec<backend::mangadex::Chapter> },
+    ChapterThumbnailLoaded { chapter_id: String, image: DynamicImage },
     PageUrlsLoaded { urls: Vec<String> },
     PageUrlsLoadFailed,
     PageImageLoaded { image: DynamicImage },
@@ -111,6 +112,78 @@ fn spawn_chapters_loader(manga_id: String, tx: mpsc::UnboundedSender<BackgroundT
             let _ = tx.send(BackgroundTask::ChaptersLoaded { chapters });
         }
     });
+}
+
+fn spawn_chapter_thumbnail_loader(
+    chapter_id: String,
+    tx: mpsc::UnboundedSender<BackgroundTask>,
+    cache: PageCache,
+) {
+    tokio::spawn(async move {
+        if let Some(image) = load_chapter_thumbnail(&chapter_id, &cache).await {
+            let _ = tx.send(BackgroundTask::ChapterThumbnailLoaded { chapter_id, image });
+        }
+    });
+}
+
+fn spawn_chapter_thumbnails_preloader(
+    chapters: Vec<backend::mangadex::Chapter>,
+    tx: mpsc::UnboundedSender<BackgroundTask>,
+    cache: PageCache,
+) {
+    tokio::spawn(async move {
+        for chapter in chapters.iter() {
+            if chapter.external_url.is_some() {
+                continue;
+            }
+            
+            // Small delay between requests to avoid rate limiting
+            tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+            
+            if let Some(image) = load_chapter_thumbnail(&chapter.id, &cache).await {
+                let _ = tx.send(BackgroundTask::ChapterThumbnailLoaded { 
+                    chapter_id: chapter.id.clone(), 
+                    image 
+                });
+            }
+        }
+    });
+}
+
+async fn load_chapter_thumbnail(chapter_id: &str, cache: &PageCache) -> Option<DynamicImage> {
+    // Check if we have cached URLs for this chapter
+    if let Some(urls) = cache.get_chapter_urls(chapter_id).await {
+        if let Some(first_url) = urls.first() {
+            return fetch_first_page_thumbnail(first_url, cache).await;
+        }
+    }
+
+    // Fetch URLs from API
+    if let Some(urls) = get_chapter_pages(chapter_id).await {
+        if !urls.is_empty() {
+            cache.insert_chapter_urls(chapter_id.to_string(), urls.clone()).await;
+            if let Some(first_url) = urls.first() {
+                return fetch_first_page_thumbnail(first_url, cache).await;
+            }
+        }
+    }
+    
+    None
+}
+
+async fn fetch_first_page_thumbnail(page_url: &str, cache: &PageCache) -> Option<DynamicImage> {
+    // Check disk/memory cache first
+    if let Some(image) = cache.get_page(page_url).await {
+        return Some(image);
+    }
+    
+    // Fetch from network and cache
+    if let Some(image) = fetch_page_image(page_url).await {
+        cache.insert_page(page_url.to_string(), image.clone()).await;
+        return Some(image);
+    }
+    
+    None
 }
 
 fn spawn_page_urls_loader(chapter_id: String, tx: mpsc::UnboundedSender<BackgroundTask>, cache: PageCache) {
@@ -261,7 +334,16 @@ async fn run_app(
                         pending_covers.remove(&manga_id);
                     }
                     BackgroundTask::ChaptersLoaded { chapters } => {
-                        app.chapters = chapters;
+                        app.chapters = chapters.clone();
+                        // Preload all chapter thumbnails in background
+                        spawn_chapter_thumbnails_preloader(
+                            chapters,
+                            task_tx.clone(),
+                            cache.clone(),
+                        );
+                    }
+                    BackgroundTask::ChapterThumbnailLoaded { chapter_id, image } => {
+                        app.add_chapter_thumbnail(&chapter_id, image);
                     }
                     BackgroundTask::PageUrlsLoaded { urls } => {
                         app.reader.page_urls = urls;
@@ -555,33 +637,46 @@ fn handle_detail_input(
     task_tx: &mpsc::UnboundedSender<BackgroundTask>,
     cache: &PageCache,
 ) {
+    let cols = app.chapter_grid_cols.max(1);
+    
     match key {
         KeyCode::Esc => {
             app.go_back();
         }
+        KeyCode::Left => {
+            if app.chapter_selected > 0 {
+                app.chapter_selected -= 1;
+                preload_chapter_thumbnails(app, app.chapter_selected, task_tx, cache);
+            }
+        }
+        KeyCode::Right => {
+            if app.chapter_selected + 1 < app.chapters.len() {
+                app.chapter_selected += 1;
+                preload_chapter_thumbnails(app, app.chapter_selected, task_tx, cache);
+            }
+        }
         KeyCode::Up => {
-            let selected = app.chapter_list_state.selected().unwrap_or(0);
-            if selected > 0 {
-                app.chapter_list_state.select(Some(selected - 1));
+            if app.chapter_selected >= cols {
+                app.chapter_selected -= cols;
+                preload_chapter_thumbnails(app, app.chapter_selected, task_tx, cache);
             }
         }
         KeyCode::Down => {
-            let selected = app.chapter_list_state.selected().unwrap_or(0);
-            if selected + 1 < app.chapters.len() {
-                app.chapter_list_state.select(Some(selected + 1));
+            let new_idx = app.chapter_selected + cols;
+            if new_idx < app.chapters.len() {
+                app.chapter_selected = new_idx;
+                preload_chapter_thumbnails(app, app.chapter_selected, task_tx, cache);
             }
         }
         KeyCode::Enter => {
-            if let Some(selected) = app.chapter_list_state.selected() {
-                if let Some(chapter) = app.chapters.get(selected) {
-                    if let Some(external_url) = &chapter.external_url {
-                        log::debug!("Chapter is external and cannot be read in-app: {}", external_url);
-                        webbrowser::open(external_url).ok();
-                    } else {
-                        let chapter_id = chapter.id.clone();
-                        app.open_reader(selected);
-                        spawn_page_urls_loader(chapter_id, task_tx.clone(), cache.clone());
-                    }
+            if let Some(chapter) = app.chapters.get(app.chapter_selected) {
+                if let Some(external_url) = &chapter.external_url {
+                    log::debug!("Chapter is external and cannot be read in-app: {}", external_url);
+                    webbrowser::open(external_url).ok();
+                } else {
+                    let chapter_id = chapter.id.clone();
+                    app.open_reader(app.chapter_selected);
+                    spawn_page_urls_loader(chapter_id, task_tx.clone(), cache.clone());
                 }
             }
         }
@@ -589,6 +684,24 @@ fn handle_detail_input(
             app.toggle_bookmark();
         }
         _ => {}
+    }
+}
+
+fn preload_chapter_thumbnails(
+    app: &App,
+    current_idx: usize,
+    task_tx: &mpsc::UnboundedSender<BackgroundTask>,
+    cache: &PageCache,
+) {
+    // Only load thumbnail for the currently selected chapter to avoid rate limiting
+    if let Some(chapter) = app.chapters.get(current_idx) {
+        if chapter.external_url.is_none() && !app.chapter_thumbnails.contains_key(&chapter.id) {
+            spawn_chapter_thumbnail_loader(
+                chapter.id.clone(),
+                task_tx.clone(),
+                cache.clone(),
+            );
+        }
     }
 }
 

@@ -3,7 +3,7 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, List, ListItem, ListState, Paragraph, Tabs},
+    widgets::{Block, Borders, ListState, Paragraph, Tabs},
     Frame,
 };
 use ratatui_image::{picker::Picker, protocol::StatefulProtocol, Resize, StatefulImage};
@@ -81,6 +81,11 @@ pub struct App {
     pub selected_manga: Option<Manga>,
     pub chapters: Vec<Chapter>,
     pub chapter_list_state: ListState,
+    pub chapter_selected: usize,      // Currently selected chapter index
+    pub chapter_scroll_row: usize,    // First visible row
+    pub chapter_grid_cols: usize,     // Columns in grid (calculated from width)
+    pub chapter_thumbnails: HashMap<String, StatefulProtocol>,
+    pub chapter_thumbnail_images: HashMap<String, DynamicImage>,
     
     // Reader view
     pub reader: ReaderState,
@@ -120,6 +125,11 @@ impl App {
             selected_manga: None,
             chapters: Vec::new(),
             chapter_list_state: ListState::default(),
+            chapter_selected: 0,
+            chapter_scroll_row: 0,
+            chapter_grid_cols: 1,
+            chapter_thumbnails: HashMap::new(),
+            chapter_thumbnail_images: HashMap::new(),
             reader: ReaderState::default(),
         }
     }
@@ -161,6 +171,18 @@ impl App {
         self.view = View::MangaDetail;
         self.chapters.clear();
         self.chapter_list_state.select(Some(0));
+        self.chapter_selected = 0;
+        self.chapter_scroll_row = 0;
+        self.chapter_thumbnails.clear();
+        self.chapter_thumbnail_images.clear();
+    }
+
+    pub fn add_chapter_thumbnail(&mut self, chapter_id: &str, image: DynamicImage) {
+        self.chapter_thumbnail_images.insert(chapter_id.to_string(), image.clone());
+        if let Some(ref picker) = self.picker {
+            let protocol = picker.new_resize_protocol(image);
+            self.chapter_thumbnails.insert(chapter_id.to_string(), protocol);
+        }
     }
 
     pub fn open_reader(&mut self, chapter_idx: usize) {
@@ -643,46 +665,110 @@ fn draw_manga_detail(f: &mut Frame, app: &mut App) {
     let details_paragraph = Paragraph::new(details);
     f.render_widget(details_paragraph, info_layout[1]);
 
-    // Chapters list
+    // Chapters panel with 2D grid
     let chapters_block = Block::default()
         .borders(Borders::ALL)
-        .title(format!("Chapters ({})", app.chapters.len()))
+        .title(format!("Chapters ({}) ←↑↓→ to navigate", app.chapters.len()))
         .border_style(Style::default().fg(Color::Yellow));
+
+    let chapters_inner = chapters_block.inner(content_layout[1]);
+    f.render_widget(chapters_block, content_layout[1]);
 
     if app.chapters.is_empty() {
         let loading = Paragraph::new("Loading chapters...")
             .alignment(Alignment::Center)
-            .style(Style::default().fg(Color::DarkGray))
-            .block(chapters_block);
-        f.render_widget(loading, content_layout[1]);
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(loading, chapters_inner);
     } else {
-        let items: Vec<ListItem> = app
-            .chapters
-            .iter()
-            .map(|ch| {
-                let vol = ch.volume.as_ref().map(|v| format!("Vol.{} ", v)).unwrap_or_default();
-                let tag = if ch.external_url.is_some() {
-                    Span::styled("[External] ", Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD))
-                } else {
-                    Span::raw("")
-                };
-                let text = format!("{}Ch.{} - {} ({} pages)", vol, ch.chapter, ch.title, ch.pages);
-                let line = Line::from(vec![tag, Span::raw(truncate_text(&text, 60))]);
-                ListItem::new(line)
-            })
+        // Calculate grid dimensions
+        const CHAPTER_CARD_WIDTH: u16 = 22;
+        const CHAPTER_CARD_HEIGHT: u16 = 12;
+        
+        let cols = (chapters_inner.width / CHAPTER_CARD_WIDTH).max(1) as usize;
+        let rows = (chapters_inner.height / CHAPTER_CARD_HEIGHT).max(1) as usize;
+        
+        // Store cols for navigation
+        app.chapter_grid_cols = cols;
+        
+        // Clamp selection
+        let max_idx = app.chapters.len().saturating_sub(1);
+        if app.chapter_selected > max_idx {
+            app.chapter_selected = max_idx;
+        }
+        
+        // Calculate which row the selected chapter is in
+        let selected_row = app.chapter_selected / cols;
+        
+        // Adjust scroll to keep selection visible
+        if selected_row < app.chapter_scroll_row {
+            app.chapter_scroll_row = selected_row;
+        } else if selected_row >= app.chapter_scroll_row + rows {
+            app.chapter_scroll_row = selected_row - rows + 1;
+        }
+        
+        // Create row layout
+        let row_constraints: Vec<Constraint> = (0..rows)
+            .map(|_| Constraint::Length(CHAPTER_CARD_HEIGHT))
             .collect();
-
-        let list = List::new(items)
-            .block(chapters_block)
-            .highlight_style(
-                Style::default()
-                    .fg(Color::Black)
-                    .bg(Color::Yellow)
-                    .add_modifier(Modifier::BOLD),
-            )
-            .highlight_symbol("▶ ");
-
-        f.render_stateful_widget(list, content_layout[1], &mut app.chapter_list_state);
+        
+        let row_areas = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints(row_constraints)
+            .split(chapters_inner);
+        
+        // Render each row
+        for (row_idx, row_area) in row_areas.iter().enumerate() {
+            let actual_row = app.chapter_scroll_row + row_idx;
+            let start_idx = actual_row * cols;
+            
+            if start_idx >= app.chapters.len() {
+                break;
+            }
+            
+            // Create column layout for this row
+            let col_constraints: Vec<Constraint> = (0..cols)
+                .map(|_| Constraint::Length(CHAPTER_CARD_WIDTH))
+                .collect();
+            
+            let col_areas = Layout::default()
+                .direction(Direction::Horizontal)
+                .constraints(col_constraints)
+                .split(*row_area);
+            
+            for (col_idx, col_area) in col_areas.iter().enumerate() {
+                let chapter_idx = start_idx + col_idx;
+                if chapter_idx >= app.chapters.len() {
+                    break;
+                }
+                
+                let chapter = &app.chapters[chapter_idx];
+                let is_selected = chapter_idx == app.chapter_selected;
+                
+                draw_chapter_card(
+                    f,
+                    *col_area,
+                    chapter,
+                    is_selected,
+                    app.chapter_thumbnails.get_mut(&chapter.id),
+                );
+            }
+        }
+        
+        // Scroll indicators
+        if app.chapter_scroll_row > 0 {
+            let up = Paragraph::new("▲ more")
+                .style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
+                .alignment(Alignment::Center);
+            f.render_widget(up, Rect::new(chapters_inner.x, chapters_inner.y, chapters_inner.width, 1));
+        }
+        
+        let total_rows = (app.chapters.len() + cols - 1) / cols;
+        if app.chapter_scroll_row + rows < total_rows {
+            let down = Paragraph::new("▼ more")
+                .style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
+                .alignment(Alignment::Center);
+            f.render_widget(down, Rect::new(chapters_inner.x, chapters_inner.y + chapters_inner.height - 1, chapters_inner.width, 1));
+        }
     }
 
     let bookmark_hint = if app.is_current_bookmarked() {
@@ -690,7 +776,7 @@ fn draw_manga_detail(f: &mut Frame, app: &mut App) {
     } else {
         "b: bookmark"
     };
-    draw_footer(f, root[2], &format!("↑/↓: select | Enter: read | {} | Esc: back | q: quit", bookmark_hint));
+    draw_footer(f, root[2], &format!("←/→: navigate | Enter: read | {} | Esc: back | q: quit", bookmark_hint));
 }
 
 fn draw_reader(f: &mut Frame, app: &mut App) {
@@ -975,6 +1061,91 @@ fn draw_manga_card(
     ]);
     let rating_paragraph = Paragraph::new(rating_line);
     f.render_widget(rating_paragraph, card_layout[3]);
+}
+
+fn draw_chapter_card(
+    f: &mut Frame,
+    area: Rect,
+    chapter: &Chapter,
+    selected: bool,
+    image_state: Option<&mut StatefulProtocol>,
+) {
+    let border_style = if selected {
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD)
+    } else {
+        Style::default().fg(Color::DarkGray)
+    };
+
+    let block = Block::default()
+        .borders(Borders::ALL)
+        .border_style(border_style);
+
+    let inner = block.inner(area);
+    f.render_widget(block, area);
+
+    if inner.height < 4 || inner.width < 5 {
+        return;
+    }
+
+    // Layout: image, chapter number, title, pages
+    let card_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Min(6),    // image
+            Constraint::Length(1), // chapter number
+            Constraint::Length(2), // title
+            Constraint::Length(1), // pages
+        ])
+        .split(inner);
+
+    // Render cover image or placeholder
+    if let Some(state) = image_state {
+        let image_widget = StatefulImage::new().resize(Resize::Fit(None));
+        f.render_stateful_widget(image_widget, card_layout[0], state);
+    } else if chapter.external_url.is_some() {
+        let placeholder = Paragraph::new("🔗\nExternal")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::Magenta));
+        f.render_widget(placeholder, card_layout[0]);
+    } else {
+        let placeholder = Paragraph::new("📖\nLoading...")
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(Color::DarkGray));
+        f.render_widget(placeholder, card_layout[0]);
+    }
+
+    // Chapter number
+    let vol = chapter.volume.as_ref().map(|v| format!("V{} ", v)).unwrap_or_default();
+    let chapter_num = format!("{}Ch.{}", vol, chapter.chapter);
+    let chapter_paragraph = Paragraph::new(truncate_text(&chapter_num, inner.width as usize))
+        .style(
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        )
+        .alignment(Alignment::Center);
+    f.render_widget(chapter_paragraph, card_layout[1]);
+
+    // Title (truncated)
+    let title = if chapter.title.is_empty() {
+        "Untitled".to_string()
+    } else {
+        chapter.title.clone()
+    };
+    let title_lines = wrap_text(&title, inner.width as usize, 2);
+    let title_paragraph = Paragraph::new(title_lines.join("\n"))
+        .style(Style::default().fg(Color::White))
+        .alignment(Alignment::Center);
+    f.render_widget(title_paragraph, card_layout[2]);
+
+    // Pages
+    let pages_text = format!("{} pages", chapter.pages);
+    let pages_paragraph = Paragraph::new(pages_text)
+        .style(Style::default().fg(Color::DarkGray))
+        .alignment(Alignment::Center);
+    f.render_widget(pages_paragraph, card_layout[3]);
 }
 
 fn truncate_text(text: &str, max_len: usize) -> String {
