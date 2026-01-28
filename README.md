@@ -17,6 +17,10 @@ A modern Terminal User Interface (TUI) for browsing and reading manga from Manga
   <img src="src/images/screen-3.png" alt="Screenshot 3" width="30%">
 </p>
 
+## Demo
+
+![Demo](src/images/demo.gif)
+
 ## Technology Stack
 
 - **[Ratatui](https://ratatui.rs/)**: TUI framework for the interface.
