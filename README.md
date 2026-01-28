@@ -19,7 +19,7 @@ A modern Terminal User Interface (TUI) for browsing and reading manga from Manga
 
 ## Demo
 
-https://github.com/nebyu08/Tachiyomi-TUI/raw/main/src/images/Tachiomi.mp4
+https://github.com/nebyu08/Tachiyomi-TUI/raw/main/src/images/output.mp4
 
 ## Technology Stack
 
